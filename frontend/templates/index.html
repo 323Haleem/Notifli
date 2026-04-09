@@ -318,7 +318,7 @@ async function doLogin(e) {
   const password = document.getElementById('login-password').value;
   
   try {
-    const res = await fetch('/api/login', {
+    const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -347,7 +347,7 @@ async function doRegister(e) {
   const timezone = document.getElementById('reg-tz').value;
   
   try {
-    const res = await fetch('/api/register', {
+    const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password, business_type, timezone })
@@ -393,7 +393,7 @@ async function loadDashboard() {
 
 async function loadStats() {
   try {
-    const stats = await apiRequest('GET', '/api/stats');
+    const stats = await apiRequest('GET', '/api/dashboard/stats');
     document.getElementById('stat-clients').textContent = stats.total_clients || 0;
     document.getElementById('stat-upcoming').textContent = stats.upcoming_appointments || 0;
     document.getElementById('stat-noshows').textContent = stats.no_shows_this_month || 0;
@@ -405,7 +405,7 @@ async function loadStats() {
 
 async function loadBusiness() {
   try {
-    const biz = await apiRequest('GET', '/api/business');
+    const biz = await apiRequest('GET', '/api/auth/me');
     currentBiz = biz;
     document.getElementById('sidebar-biz-name').textContent = biz.name;
   } catch (err) {
@@ -483,7 +483,8 @@ async function saveClient() {
   }
   
   try {
-    await apiRequest('POST', '/api/clients', { name, phone, email, notes });
+    // Business ID is handled automatically by the backend via auth token
+    await apiRequest('POST', '/api/clients', { name, phone, email: email || null, notes: notes || null });
     closeModal('modal-client');
     showToast('Client added! ✅', 'success');
     renderClients();
@@ -500,6 +501,10 @@ async function renderClients() {
     const filtered = clients.filter(c => c.name.toLowerCase().includes(search) || c.phone.includes(search));
     
     const container = document.getElementById('clients-list');
+    if (filtered.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No clients yet. Click "+ Add Client" to get started!</div>';
+      return;
+    }
     container.innerHTML = filtered.map(c => `
       <div class="list-item">
         <div class="list-item-info">
@@ -558,7 +563,13 @@ async function saveAppointment() {
   }
   
   try {
-    await apiRequest('POST', '/api/appointments', { client_id, service, scheduled_at, duration_minutes, notes });
+    await apiRequest('POST', '/api/appointments', { 
+      client_id, 
+      service: service || null, 
+      scheduled_at, 
+      duration_minutes, 
+      notes: notes || null 
+    });
     closeModal('modal-appointment');
     showToast('Appointment scheduled! 📅', 'success');
     renderAppointments();
@@ -579,6 +590,10 @@ async function renderAppointments() {
     if (dateFilter) filtered = filtered.filter(a => a.scheduled_at.startsWith(dateFilter));
     
     const container = document.getElementById('appointments-list');
+    if (filtered.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No appointments yet. Click "+ New Appointment" to schedule your first!</div>';
+      return;
+    }
     container.innerHTML = filtered.map(a => `
       <div class="list-item">
         <div class="list-item-info">
@@ -620,6 +635,10 @@ async function renderSMSLogs() {
     if (typeFilter === 'in') filtered = logs.filter(l => l.direction === 'in');
     
     const container = document.getElementById('sms-logs-list');
+    if (filtered.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No SMS messages yet. Reminders will appear here once you schedule appointments!</div>';
+      return;
+    }
     container.innerHTML = filtered.map(l => `
       <div class="list-item">
         <div class="list-item-info">
@@ -640,14 +659,14 @@ async function renderSMSLogs() {
 // Settings
 async function loadSettings() {
   try {
-    const settings = await apiRequest('GET', '/api/settings');
-    document.getElementById('setting-24h').checked = settings.send_24h;
-    document.getElementById('setting-2h').checked = settings.send_2h;
-    document.getElementById('setting-msg-24h').value = settings.message_24h || '';
-    document.getElementById('setting-msg-2h').value = settings.message_2h || '';
+    const settings = await apiRequest('GET', '/api/settings/reminders');
+    document.getElementById('setting-24h').checked = settings.send_24h !== undefined ? settings.send_24h : true;
+    document.getElementById('setting-2h').checked = settings.send_2h !== undefined ? settings.send_2h : true;
+    document.getElementById('setting-msg-24h').value = settings.message_24h || settings.msg_24h || 'Hi {name}, this is a reminder for your {service} appointment tomorrow at {time}. Reply CONFIRM to confirm or CANCEL to reschedule.';
+    document.getElementById('setting-msg-2h').value = settings.message_2h || settings.msg_2h || 'Hi {name}, quick reminder: your {service} appointment is today at {time}. See you soon!';
     
     // Update billing status
-    const biz = await apiRequest('GET', '/api/business');
+    const biz = await apiRequest('GET', '/api/auth/me');
     const billingEl = document.getElementById('billing-status');
     const actionsEl = document.getElementById('billing-actions');
     
@@ -669,11 +688,11 @@ async function loadSettings() {
 
 async function saveSettings() {
   try {
-    await apiRequest('PATCH', '/api/settings', {
+    await apiRequest('PATCH', '/api/settings/reminders', {
       send_24h: document.getElementById('setting-24h').checked,
       send_2h: document.getElementById('setting-2h').checked,
-      message_24h: document.getElementById('setting-msg-24h').value,
-      message_2h: document.getElementById('setting-msg-2h').value
+      msg_24h: document.getElementById('setting-msg-24h').value,
+      msg_2h: document.getElementById('setting-msg-2h').value
     });
     showToast('Settings saved! ✅', 'success');
   } catch (err) {
@@ -683,9 +702,12 @@ async function saveSettings() {
 
 async function openBilling() {
   try {
-    const res = await fetch('/api/create-checkout', {
+    const res = await fetch('/api/billing/checkout', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${authToken}` }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      }
     });
     const data = await res.json();
     if (data.url) {
