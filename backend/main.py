@@ -44,6 +44,11 @@ def startup():
 def shutdown():
     stop_scheduler()
 
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "Notifli"}
+
 # Landing page
 @app.get("/", response_class=HTMLResponse)
 async def serve_landing():
