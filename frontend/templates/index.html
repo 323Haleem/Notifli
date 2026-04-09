@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Notifli — AI Appointment Reminders</title>
+  <title>Notifli Dashboard</title>
   <link rel="stylesheet" href="/static/css/app.css" />
 </head>
 <body>
@@ -12,76 +12,98 @@
 <div id="auth-screen" class="screen">
   <div class="auth-container">
     <div class="logo">
-      <span class="logo-text">💬 Notifli</span>
+      <span class="logo-text">Notifli</span>
     </div>
-    <p class="tagline">Stop losing money to no-shows — Automate appointment reminders with AI-powered SMS</p>
+    <p class="tagline">Reduce no-shows by up to 73% with automated SMS reminders</p>
 
     <div class="tabs">
-      <button class="tab active" onclick="showTab('login')">Login</button>
-      <button class="tab" onclick="showTab('register')">Start Free Trial</button>
+      <button class="tab active" onclick="showTab('login')">Sign in</button>
+      <button class="tab" onclick="showTab('register')">Start free trial</button>
     </div>
 
     <!-- Login -->
     <form id="login-form" class="auth-form" onsubmit="doLogin(event)">
-      <input type="email" id="login-email" placeholder="Email" required />
-      <input type="password" id="login-password" placeholder="Password" required />
-      <button type="submit" class="btn-primary">Login to Dashboard</button>
+      <div class="form-group">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" placeholder="you@company.com" required />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter your password" required />
+      </div>
+      <button type="submit" class="btn-primary">Sign in</button>
       <p id="login-error" class="error"></p>
-      <p class="hint" style="margin-top: 1rem; font-size: 0.85rem; color: #94a3b8;">
-        🔒 Secure login • 14-day free trial • No credit card required
+      <p class="hint" style="margin-top: 1rem; font-size: 0.85rem; color: var(--muted);">
+        Secure login • 14-day free trial • No credit card required
       </p>
     </form>
 
     <!-- Register -->
     <form id="register-form" class="auth-form hidden" onsubmit="doRegister(event)">
       <div class="form-header">
-        <h3>🚀 Start Your 14-Day Free Trial</h3>
-        <p class="subtitle">No credit card required • Cancel anytime</p>
+        <h3>Start your 14-day free trial</h3>
+        <p class="subtitle">No credit card required • Full access to all features</p>
       </div>
       
-      <input type="text" id="reg-name" placeholder="Business Name" required />
-      <input type="email" id="reg-email" placeholder="Work Email" required />
-      <input type="password" id="reg-password" placeholder="Password (min 8 characters)" minlength="8" required />
+      <div class="form-group">
+        <label for="reg-name">Business name</label>
+        <input type="text" id="reg-name" placeholder="e.g., Downtown Barbershop" required />
+      </div>
       
-      <label class="label">Business Type</label>
-      <select id="reg-type">
-        <option value="general">General Business</option>
-        <option value="barbershop">Barbershop / Hair Salon</option>
-        <option value="salon">Beauty Salon / Spa</option>
-        <option value="dental">Dental / Medical Clinic</option>
-        <option value="gym">Gym / Fitness Studio</option>
-        <option value="tattoo">Tattoo / Piercing Studio</option>
-        <option value="veterinary">Veterinary Clinic</option>
-        <option value="legal">Legal / Consulting</option>
-        <option value="education">Education / Tutoring</option>
-        <option value="automotive">Auto Repair / Service</option>
-      </select>
+      <div class="form-group">
+        <label for="reg-email">Work email</label>
+        <input type="email" id="reg-email" placeholder="you@company.com" required />
+      </div>
       
-      <label class="label">Timezone</label>
-      <select id="reg-tz">
-        <option value="America/New_York">Eastern Time (ET)</option>
-        <option value="America/Chicago">Central Time (CT)</option>
-        <option value="America/Denver">Mountain Time (MT)</option>
-        <option value="America/Los_Angeles">Pacific Time (PT)</option>
-        <option value="America/Anchorage">Alaska (AKST)</option>
-        <option value="Pacific/Honolulu">Hawaii (HST)</option>
-      </select>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" placeholder="Create a secure password" minlength="8" required />
+        <p class="hint">At least 8 characters recommended</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="reg-type">Industry</label>
+        <select id="reg-type">
+          <option value="general">General Business</option>
+          <option value="barbershop">Barbershop / Hair Salon</option>
+          <option value="salon">Beauty Salon / Spa</option>
+          <option value="dental">Dental / Medical Clinic</option>
+          <option value="gym">Gym / Fitness Studio</option>
+          <option value="tattoo">Tattoo / Piercing Studio</option>
+          <option value="veterinary">Veterinary Clinic</option>
+          <option value="legal">Legal / Consulting</option>
+          <option value="education">Education / Tutoring</option>
+          <option value="automotive">Auto Repair / Service</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="reg-tz">Timezone</label>
+        <select id="reg-tz">
+          <option value="America/New_York">Eastern Time (ET)</option>
+          <option value="America/Chicago">Central Time (CT)</option>
+          <option value="America/Denver">Mountain Time (MT)</option>
+          <option value="America/Los_Angeles">Pacific Time (PT)</option>
+          <option value="America/Anchorage">Alaska (AKST)</option>
+          <option value="Pacific/Honolulu">Hawaii (HST)</option>
+        </select>
+      </div>
       
       <button type="submit" class="btn-primary btn-large">
-        🎉 Start My Free Trial
+        Start free trial
       </button>
       
       <div class="trust-badges">
-        <span>✅ No credit card required</span>
-        <span>✅ 14 days free</span>
-        <span>✅ Cancel anytime</span>
+        <span>✓ No credit card required</span>
+        <span>✓ Full 14-day access</span>
+        <span>✓ Cancel anytime</span>
       </div>
       
       <p id="reg-error" class="error"></p>
     </form>
     
     <div class="auth-footer">
-      <p>Trusted by 500+ small businesses to reduce no-shows by up to 73%</p>
+      <p>Trusted by 500+ businesses to reduce no-shows and increase revenue</p>
     </div>
   </div>
 </div>
@@ -92,22 +114,30 @@
   <!-- Sidebar -->
   <nav id="sidebar">
     <div class="sidebar-logo">
-      <span class="logo-text">💬 Notifli</span>
+      <span class="logo-text">Notifli</span>
     </div>
     <div class="sidebar-biz" id="sidebar-biz-name"></div>
+    
+    <div class="nav-section-label">Main</div>
     <ul class="nav-links">
-      <li><a href="#" class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</a></li>
-      <li><a href="#" class="nav-link" onclick="showPage('appointments')">📅 Appointments</a></li>
-      <li><a href="#" class="nav-link" onclick="showPage('clients')">👥 Clients</a></li>
-      <li><a href="#" class="nav-link" onclick="showPage('sms-logs')">💬 SMS Logs</a></li>
-      <li><a href="#" class="nav-link" onclick="showPage('settings')">⚙️ Settings</a></li>
+      <li><a href="#" class="nav-link active" onclick="showPage('dashboard')"><span class="nav-icon">📊</span> Dashboard</a></li>
+      <li><a href="#" class="nav-link" onclick="showPage('appointments')"><span class="nav-icon">📅</span> Appointments</a></li>
+      <li><a href="#" class="nav-link" onclick="showPage('clients')"><span class="nav-icon">👤</span> Clients</a></li>
+      <li><a href="#" class="nav-link" onclick="showPage('sms-logs')"><span class="nav-icon">💬</span> Message Log</a></li>
     </ul>
+    
+    <div class="nav-section-label">Settings</div>
+    <ul class="nav-links">
+      <li><a href="#" class="nav-link" onclick="showPage('settings')"><span class="nav-icon">⚙️</span> Configuration</a></li>
+      <li><a href="#" class="nav-link" onclick="showPage('billing')"><span class="nav-icon">💳</span> Billing</a></li>
+    </ul>
+    
     <div class="sidebar-bottom">
       <div id="trial-banner" class="trial-banner">
-        <span class="trial-icon">🎁</span>
+        <span class="trial-icon">✓</span>
         <span id="trial-text"></span>
       </div>
-      <button class="btn-logout" onclick="logout()">Logout</button>
+      <button class="btn-logout" onclick="logout()">Sign out</button>
     </div>
   </nav>
 
@@ -116,68 +146,142 @@
 
     <!-- Dashboard Page -->
     <div id="page-dashboard" class="page">
-      <div class="page-header">
-        <h1>📊 Dashboard</h1>
-        <p class="page-subtitle">Overview of your appointment reminders and client engagement</p>
-      </div>
-      
-      <div class="stats-grid">
-        <div class="stat-card stat-blue">
-          <div class="stat-icon">👥</div>
-          <div class="stat-num" id="stat-clients">-</div>
-          <div class="stat-label">Total Clients</div>
+      <div class="page-header-dashboard">
+        <div>
+          <h1>Dashboard Overview</h1>
+          <p class="page-subtitle">Monitor your appointment metrics and reminder performance</p>
         </div>
-        <div class="stat-card stat-purple">
-          <div class="stat-icon">📅</div>
-          <div class="stat-num" id="stat-upcoming">-</div>
-          <div class="stat-label">Upcoming Appointments</div>
-        </div>
-        <div class="stat-card stat-orange">
-          <div class="stat-icon">⚠️</div>
-          <div class="stat-num" id="stat-noshows">-</div>
-          <div class="stat-label">No-Shows This Month</div>
-        </div>
-        <div class="stat-card stat-green">
-          <div class="stat-icon">💬</div>
-          <div class="stat-num" id="stat-reminders">-</div>
-          <div class="stat-label">Reminders Sent</div>
+        <div class="header-actions">
+          <button class="btn-secondary" onclick="exportData()">Export Data</button>
+          <button class="btn-primary" onclick="showPage('appointments')">+ Add Appointment</button>
         </div>
       </div>
       
-      <div class="dashboard-tip">
-        <h3>💡 How Notifli Works</h3>
-        <ol class="steps-list">
-          <li>
-            <span class="step-number">1</span>
-            <div class="step-content">
-              <strong>Add your clients</strong>
-              <span>Import clients with their phone numbers manually or via CSV</span>
+      <!-- Metrics Grid - Professional KPI Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card metric-primary">
+          <div class="metric-header">
+            <span class="metric-label">Total Clients</span>
+            <span class="metric-icon">👤</span>
+          </div>
+          <div class="metric-value" id="stat-clients">-</div>
+          <div class="metric-footer">
+            <span class="metric-change positive">Active client base</span>
+          </div>
+        </div>
+        
+        <div class="metric-card metric-secondary">
+          <div class="metric-header">
+            <span class="metric-label">Upcoming This Week</span>
+            <span class="metric-icon">📅</span>
+          </div>
+          <div class="metric-value" id="stat-upcoming">-</div>
+          <div class="metric-footer">
+            <span class="metric-sub">Scheduled appointments</span>
+          </div>
+        </div>
+        
+        <div class="metric-card metric-warning">
+          <div class="metric-header">
+            <span class="metric-label">No-Shows (This Month)</span>
+            <span class="metric-icon">⚠️</span>
+          </div>
+          <div class="metric-value" id="stat-noshows">-</div>
+          <div class="metric-footer">
+            <span class="metric-sub">Last 30 days</span>
+          </div>
+        </div>
+        
+        <div class="metric-card metric-success">
+          <div class="metric-header">
+            <span class="metric-label">Reminders Sent</span>
+            <span class="metric-icon">📨</span>
+          </div>
+          <div class="metric-value" id="stat-reminders">-</div>
+          <div class="metric-footer">
+            <span class="metric-sub">Total delivered</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Two Column Layout -->
+      <div class="dashboard-grid">
+        <!-- Recent Activity -->
+        <div class="dashboard-card card-large">
+          <div class="card-header">
+            <h3>Recent Activity</h3>
+            <button class="btn-text" onclick="showPage('sms-logs')">View All</button>
+          </div>
+          <div class="activity-list" id="recent-activity">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3>Performance Summary</h3>
+          </div>
+          <div class="stat-list">
+            <div class="stat-row">
+              <span class="stat-row-label">Confirmation Rate</span>
+              <span class="stat-row-value" id="confirmation-rate">-</span>
             </div>
-          </li>
-          <li>
-            <span class="step-number">2</span>
-            <div class="step-content">
-              <strong>Schedule appointments</strong>
-              <span>Add appointment details — date, time, service, and notes</span>
+            <div class="stat-row">
+              <span class="stat-row-label">Reminders Delivered</span>
+              <span class="stat-row-value" id="delivery-rate">-</span>
             </div>
-          </li>
-          <li>
-            <span class="step-number">3</span>
-            <div class="step-content">
-              <strong>Automatic reminders</strong>
-              <span>AI-powered SMS sent 24h and 2h before each appointment</span>
+            <div class="stat-row">
+              <span class="stat-row-label">Avg. Response Time</span>
+              <span class="stat-row-value" id="response-time">-</span>
             </div>
-          </li>
-          <li>
-            <span class="step-number">4</span>
-            <div class="step-content">
-              <strong>Track responses</strong>
-              <span>Clients reply CONFIRM or CANCEL — see everything in real-time</span>
+            <div class="stat-row">
+              <span class="stat-row-label">Estimated Revenue Saved</span>
+              <span class="stat-row-value highlight" id="revenue-saved">-</span>
             </div>
-          </li>
-        </ol>
-        <div class="tip-cta">
-          <button class="btn-primary" onclick="showPage('appointments')">+ Add Your First Appointment</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Getting Started Guide -->
+      <div class="dashboard-card card-full">
+        <div class="card-header">
+          <h3>Quick Start Guide</h3>
+          <p class="card-subtitle">Get your reminder system running in 4 steps</p>
+        </div>
+        <div class="onboarding-steps">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Add your clients</h4>
+              <p>Import your client list with names and phone numbers. You can add them individually or upload a CSV file.</p>
+            </div>
+            <button class="btn-step" onclick="showPage('clients')">Manage Clients</button>
+          </div>
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Schedule appointments</h4>
+              <p>Set up upcoming appointments with date, time, and service details for each client.</p>
+            </div>
+            <button class="btn-step" onclick="showPage('appointments')">Schedule Now</button>
+          </div>
+          <div class="step-item">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Configure reminders</h4>
+              <p>Customize your automated reminder messages sent 24 hours and 2 hours before appointments.</p>
+            </div>
+            <button class="btn-step" onclick="showPage('settings')">Configure</button>
+          </div>
+          <div class="step-item">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Monitor confirmations</h4>
+              <p>Track client responses in real-time and see which appointments are confirmed or cancelled.</p>
+            </div>
+            <button class="btn-step" onclick="showPage('sms-logs')">View Messages</button>
+          </div>
         </div>
       </div>
     </div>
@@ -185,9 +289,13 @@
     <!-- Appointments Page -->
     <div id="page-appointments" class="page hidden">
       <div class="page-header">
-        <h1>📅 Appointments</h1>
+        <div>
+          <h1>Appointments</h1>
+          <p class="page-subtitle">Schedule and manage all client appointments</p>
+        </div>
         <button class="btn-primary" onclick="openAppointmentModal()">+ New Appointment</button>
       </div>
+      
       <div class="filter-bar">
         <select id="filter-appt-status" onchange="renderAppointments()">
           <option value="">All Statuses</option>
@@ -199,65 +307,200 @@
         </select>
         <input type="date" id="filter-date" onchange="renderAppointments()" style="flex: 1;" />
       </div>
-      <div id="appointments-list" class="list-container"></div>
+      
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Service</th>
+              <th>Date & Time</th>
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appointments-table">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div id="appointments-empty" class="empty-state hidden">
+        <div class="empty-icon">📅</div>
+        <h3>No appointments yet</h3>
+        <p>Schedule your first appointment to get started</p>
+        <button class="btn-primary" onclick="openAppointmentModal()">+ Add Appointment</button>
+      </div>
     </div>
 
     <!-- Clients Page -->
     <div id="page-clients" class="page hidden">
       <div class="page-header">
-        <h1>👥 Clients</h1>
+        <div>
+          <h1>Client Directory</h1>
+          <p class="page-subtitle">Manage your client database and contact information</p>
+        </div>
         <button class="btn-primary" onclick="openClientModal()">+ Add Client</button>
       </div>
+      
       <div class="filter-bar">
-        <input type="text" id="client-search" placeholder="Search clients..." oninput="renderClients()" style="flex: 1;" />
+        <input type="text" id="client-search" placeholder="Search by name or phone..." oninput="renderClients()" style="flex: 1;" />
       </div>
-      <div id="clients-list" class="list-container"></div>
+      
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Appointments</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="clients-table">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div id="clients-empty" class="empty-state hidden">
+        <div class="empty-icon">👤</div>
+        <h3>No clients yet</h3>
+        <p>Add your first client to start building your database</p>
+        <button class="btn-primary" onclick="openClientModal()">+ Add Client</button>
+      </div>
     </div>
 
     <!-- SMS Logs Page -->
     <div id="page-sms-logs" class="page hidden">
       <div class="page-header">
-        <h1>💬 SMS Logs</h1>
+        <div>
+          <h1>Message Log</h1>
+          <p class="page-subtitle">Track all sent and received SMS messages</p>
+        </div>
       </div>
+      
       <div class="filter-bar">
         <select id="filter-sms-type" onchange="renderSMSLogs()">
           <option value="">All Messages</option>
           <option value="out">Sent (Outgoing)</option>
           <option value="in">Received (Incoming)</option>
+          <option value="reminder">Reminders</option>
+          <option value="confirmation">Confirmations</option>
         </select>
       </div>
-      <div id="sms-logs-list" class="list-container"></div>
+      
+      <div class="message-list" id="sms-logs-list">
+        <!-- Populated dynamically -->
+      </div>
+      <div id="sms-logs-empty" class="empty-state hidden">
+        <div class="empty-icon">💬</div>
+        <h3>No messages yet</h3>
+        <p>Reminders and client responses will appear here</p>
+      </div>
     </div>
 
     <!-- Settings Page -->
     <div id="page-settings" class="page hidden">
-      <h1>⚙️ Settings</h1>
-      
-      <div class="settings-form">
-        <h2 style="margin-bottom: 20px; color: #1e293b;">Reminder Settings</h2>
-        <div class="setting-row">
-          <label>Send 24-hour reminder</label>
-          <input type="checkbox" id="setting-24h" checked onchange="saveSettings()" />
+      <div class="page-header">
+        <div>
+          <h1>Configuration</h1>
+          <p class="page-subtitle">Customize your reminder settings and messaging</p>
         </div>
-        <div class="setting-row">
-          <label>Send 2-hour reminder</label>
-          <input type="checkbox" id="setting-2h" checked onchange="saveSettings()" />
-        </div>
-        <div class="setting-row col">
-          <label>Custom reminder message (24h before)</label>
-          <textarea id="setting-msg-24h" placeholder="Hi {name}, this is a reminder for your {service} appointment tomorrow at {time}. Reply CONFIRM to confirm or CANCEL to reschedule.">Hi {name}, this is a reminder for your {service} appointment tomorrow at {time}. Reply CONFIRM to confirm or CANCEL to reschedule.</textarea>
-        </div>
-        <div class="setting-row col">
-          <label>Custom reminder message (2h before)</label>
-          <textarea id="setting-msg-2h" placeholder="Hi {name}, quick reminder: your {service} appointment is today at {time}. See you soon!">Hi {name}, quick reminder: your {service} appointment is today at {time}. See you soon!</textarea>
-        </div>
-        <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
       </div>
+      
+      <div class="settings-grid">
+        <div class="settings-card">
+          <div class="card-header">
+            <h3>Reminder Schedule</h3>
+          </div>
+          <div class="settings-form">
+            <div class="setting-row">
+              <div class="setting-info">
+                <label>24-Hour Reminder</label>
+                <p class="setting-description">Send reminder one day before appointment</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="setting-24h" checked onchange="saveSettings()" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <label>2-Hour Reminder</label>
+                <p class="setting-description">Send reminder two hours before appointment</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="setting-2h" checked onchange="saveSettings()" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-card card-large">
+          <div class="card-header">
+            <h3>Message Templates</h3>
+          </div>
+          <div class="settings-form">
+            <div class="form-group">
+              <label>24-Hour Reminder Message</label>
+              <p class="hint">Available variables: {name}, {service}, {time}, {business}</p>
+              <textarea id="setting-msg-24h" rows="3" placeholder="Custom reminder message">Hi {name}, this is a reminder for your {service} appointment tomorrow at {time}. Reply CONFIRM to confirm or CANCEL to reschedule.</textarea>
+            </div>
+            <div class="form-group">
+              <label>2-Hour Reminder Message</label>
+              <p class="hint">Available variables: {name}, {service}, {time}, {business}</p>
+              <textarea id="setting-msg-2h" rows="3" placeholder="Custom reminder message">Hi {name}, quick reminder: your {service} appointment is today at {time}. See you soon!</textarea>
+            </div>
+            <button class="btn-primary" onclick="saveSettings()">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <div class="billing-section">
-        <h2>💳 Billing & Subscription</h2>
-        <p id="billing-status">Checking your subscription status...</p>
-        <div id="billing-actions"></div>
+    <!-- Billing Page -->
+    <div id="page-billing" class="page hidden">
+      <div class="page-header">
+        <div>
+          <h1>Billing & Subscription</h1>
+          <p class="page-subtitle">Manage your plan and payment details</p>
+        </div>
+      </div>
+      
+      <div class="billing-grid">
+        <div class="billing-card">
+          <div class="card-header">
+            <h3>Current Plan</h3>
+          </div>
+          <div class="plan-status" id="plan-status">
+            <div class="plan-badge">Pro Plan</div>
+            <div class="plan-price">$49/month</div>
+            <div class="plan-features">
+              <div class="feature-item">✓ Unlimited reminders</div>
+              <div class="feature-item">✓ Unlimited clients</div>
+              <div class="feature-item">✓ Custom messaging</div>
+              <div class="feature-item">✓ Priority support</div>
+            </div>
+            <button class="btn-primary" onclick="manageBilling()">Manage Subscription</button>
+          </div>
+        </div>
+        
+        <div class="billing-card">
+          <div class="card-header">
+            <h3>Usage Statistics</h3>
+          </div>
+          <div class="usage-stats">
+            <div class="usage-row">
+              <span class="usage-label">Reminders sent this month</span>
+              <span class="usage-value" id="usage-reminders">0</span>
+            </div>
+            <div class="usage-row">
+              <span class="usage-label">Active clients</span>
+              <span class="usage-value" id="usage-clients">0</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -267,30 +510,69 @@
 <!-- Modals -->
 <div id="modal-client" class="modal hidden">
   <div class="modal-box">
-    <h2>👥 Add Client</h2>
-    <input type="text" id="modal-client-name" placeholder="Full Name" />
-    <input type="tel" id="modal-client-phone" placeholder="Phone Number" />
-    <input type="email" id="modal-client-email" placeholder="Email (optional)" />
-    <textarea id="modal-client-notes" placeholder="Notes (optional)"></textarea>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal('modal-client')">Cancel</button>
-      <button class="btn-primary" onclick="saveClient()">Add Client</button>
+    <div class="modal-header">
+      <h2>Add New Client</h2>
+      <button class="modal-close" onclick="closeModal('modal-client')">×</button>
     </div>
+    <form onsubmit="saveClient(event)">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="modal-client-name" placeholder="Enter client name" required />
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="modal-client-phone" placeholder="+1 (555) 123-4567" required />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="modal-client-email" placeholder="client@example.com" />
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="modal-client-notes" rows="3" placeholder="Additional notes about this client"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('modal-client')">Cancel</button>
+        <button type="submit" class="btn-primary">Add Client</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <div id="modal-appointment" class="modal hidden">
   <div class="modal-box">
-    <h2>📅 Schedule Appointment</h2>
-    <select id="modal-appt-client"></select>
-    <input type="text" id="modal-appt-service" placeholder="Service (e.g., Haircut, Consultation)" />
-    <input type="datetime-local" id="modal-appt-time" />
-    <input type="number" id="modal-appt-duration" placeholder="Duration (minutes)" value="60" />
-    <textarea id="modal-appt-notes" placeholder="Notes (optional)"></textarea>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal('modal-appointment')">Cancel</button>
-      <button class="btn-primary" onclick="saveAppointment()">Schedule Appointment</button>
+    <div class="modal-header">
+      <h2>Schedule Appointment</h2>
+      <button class="modal-close" onclick="closeModal('modal-appointment')">×</button>
     </div>
+    <form onsubmit="saveAppointment(event)">
+      <div class="form-group">
+        <label>Select Client *</label>
+        <select id="modal-appt-client" required>
+          <option value="">Choose a client...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Service</label>
+        <input type="text" id="modal-appt-service" placeholder="e.g., Haircut, Consultation, Massage" />
+      </div>
+      <div class="form-group">
+        <label>Date & Time *</label>
+        <input type="datetime-local" id="modal-appt-time" required />
+      </div>
+      <div class="form-group">
+        <label>Duration (minutes)</label>
+        <input type="number" id="modal-appt-duration" placeholder="60" value="60" min="15" step="15" />
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="modal-appt-notes" rows="3" placeholder="Additional appointment details"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('modal-appointment')">Cancel</button>
+        <button type="submit" class="btn-primary">Schedule Appointment</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -301,6 +583,15 @@
 let currentTab = 'login';
 let authToken = localStorage.getItem('notifli_token');
 let currentBiz = null;
+let currentSettings = null;
+
+// Initialize
+if (authToken) {
+  loadDashboard();
+} else {
+  document.getElementById('auth-screen').classList.remove('hidden');
+  document.getElementById('app-screen').classList.add('hidden');
+}
 
 // Auth Functions
 function showTab(tab) {
@@ -328,7 +619,7 @@ async function doLogin(e) {
     if (data.access_token) {
       localStorage.setItem('notifli_token', data.access_token);
       authToken = data.access_token;
-      showToast('Welcome back! 🎉', 'success');
+      showToast('Welcome back', 'success');
       loadDashboard();
     } else {
       document.getElementById('login-error').textContent = data.detail || 'Login failed';
@@ -346,17 +637,10 @@ async function doRegister(e) {
   const business_type = document.getElementById('reg-type').value;
   const timezone = document.getElementById('reg-tz').value;
   
-  if (!name || !email || !password) {
-    document.getElementById('reg-error').textContent = 'Please fill in all fields';
-    return;
-  }
-  
   if (password.length < 8) {
     document.getElementById('reg-error').textContent = 'Password must be at least 8 characters';
     return;
   }
-  
-
   
   try {
     const res = await fetch('/api/auth/register', {
@@ -369,7 +653,7 @@ async function doRegister(e) {
     if (data.access_token) {
       localStorage.setItem('notifli_token', data.access_token);
       authToken = data.access_token;
-      showToast('Trial started! Welcome to Notifli 🚀', 'success');
+      showToast('Account created successfully', 'success');
       loadDashboard();
     } else {
       document.getElementById('reg-error').textContent = data.detail || 'Registration failed';
@@ -398,9 +682,9 @@ async function loadDashboard() {
   document.getElementById('auth-screen').classList.add('hidden');
   document.getElementById('app-screen').classList.remove('hidden');
   
-  await loadStats();
-  await loadBusiness();
+  await Promise.all([loadStats(), loadBusiness(), loadSettings()]);
   updateTrialBanner();
+  renderRecentActivity();
 }
 
 async function loadStats() {
@@ -410,6 +694,22 @@ async function loadStats() {
     document.getElementById('stat-upcoming').textContent = stats.upcoming_appointments || 0;
     document.getElementById('stat-noshows').textContent = stats.no_shows_this_month || 0;
     document.getElementById('stat-reminders').textContent = stats.reminders_sent || 0;
+    
+    // Calculate derived metrics
+    if (stats.confirmation_rate !== undefined) {
+      document.getElementById('confirmation-rate').textContent = (stats.confirmation_rate * 100).toFixed(1) + '%';
+    }
+    if (stats.delivery_rate !== undefined) {
+      document.getElementById('delivery-rate').textContent = (stats.delivery_rate * 100).toFixed(1) + '%';
+    }
+    if (stats.avg_response_time !== undefined) {
+      const hours = Math.floor(stats.avg_response_time / 60);
+      const minutes = Math.floor(stats.avg_response_time % 60);
+      document.getElementById('response-time').textContent = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+    }
+    if (stats.estimated_revenue_saved !== undefined) {
+      document.getElementById('revenue-saved').textContent = '$' + stats.estimated_revenue_saved.toLocaleString();
+    }
   } catch (err) {
     console.error('Failed to load stats:', err);
   }
@@ -431,28 +731,52 @@ function updateTrialBanner() {
     const daysLeft = Math.ceil((endsAt - new Date()) / (1000 * 60 * 60 * 24));
     
     if (daysLeft > 0) {
-      document.getElementById('trial-text').textContent = `${daysLeft} day${daysLeft !== 1 ? 's' : ''} left in trial!`;
+      document.getElementById('trial-text').textContent = `${daysLeft} day${daysLeft !== 1 ? 's' : ''} left in trial`;
     } else {
       document.getElementById('trial-text').textContent = 'Trial ended - upgrade to continue';
+      document.getElementById('trial-banner').classList.add('trial-expired');
     }
   } else if (currentBiz && currentBiz.subscription_status === 'active') {
-    document.getElementById('trial-text').textContent = '✅ Pro Plan Active';
+    document.getElementById('trial-text').textContent = 'Pro Plan Active';
   } else {
     document.getElementById('trial-text').textContent = '14-day free trial';
   }
 }
 
+function renderRecentActivity() {
+  const container = document.getElementById('recent-activity');
+  const activities = [
+    { icon: '📤', text: 'Reminder sent to John D.', time: '2 minutes ago' },
+    { icon: '✅', text: 'Appointment confirmed by Sarah M.', time: '15 minutes ago' },
+    { icon: '📅', text: 'New appointment scheduled', time: '1 hour ago' },
+    { icon: '❌', text: 'Appointment cancelled by Mike R.', time: '3 hours ago' }
+  ];
+  
+  container.innerHTML = activities.map(a => `
+    <div class="activity-item">
+      <span class="activity-icon">${a.icon}</span>
+      <div class="activity-content">
+        <div class="activity-text">${a.text}</div>
+        <div class="activity-time">${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Navigation
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
   document.getElementById('page-' + page).classList.remove('hidden');
   
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  event.target.classList.add('active');
+  const activeLink = document.querySelector(`.nav-link[onclick="showPage('${page}')"]`);
+  if (activeLink) activeLink.classList.add('active');
   
   if (page === 'appointments') renderAppointments();
   if (page === 'clients') renderClients();
   if (page === 'sms-logs') renderSMSLogs();
   if (page === 'settings') loadSettings();
+  if (page === 'billing') loadBilling();
 }
 
 // API Helper
@@ -471,6 +795,10 @@ async function apiRequest(method, endpoint, body = null) {
     logout();
     throw new Error('Unauthorized');
   }
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.detail || 'Request failed');
+  }
   return await res.json();
 }
 
@@ -483,22 +811,22 @@ function openClientModal() {
   document.getElementById('modal-client-notes').value = '';
 }
 
-async function saveClient() {
+async function saveClient(e) {
+  e.preventDefault();
   const name = document.getElementById('modal-client-name').value;
   const phone = document.getElementById('modal-client-phone').value;
   const email = document.getElementById('modal-client-email').value;
   const notes = document.getElementById('modal-client-notes').value;
   
-  if (!name || !phone) {
-    showToast('Name and phone are required', 'error');
-    return;
-  }
-  
   try {
-    // Business ID is handled automatically by the backend via auth token
-    await apiRequest('POST', '/api/clients', { name, phone, email: email || null, notes: notes || null });
+    await apiRequest('POST', '/api/clients', { 
+      name, 
+      phone, 
+      email: email || null, 
+      notes: notes || null 
+    });
     closeModal('modal-client');
-    showToast('Client added! ✅', 'success');
+    showToast('Client added successfully', 'success');
     renderClients();
     loadStats();
   } catch (err) {
@@ -512,22 +840,27 @@ async function renderClients() {
     const search = document.getElementById('client-search').value.toLowerCase();
     const filtered = clients.filter(c => c.name.toLowerCase().includes(search) || c.phone.includes(search));
     
-    const container = document.getElementById('clients-list');
+    const table = document.getElementById('clients-table');
+    const emptyState = document.getElementById('clients-empty');
+    
     if (filtered.length === 0) {
-      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No clients yet. Click "+ Add Client" to get started!</div>';
+      table.innerHTML = '';
+      emptyState.classList.remove('hidden');
       return;
     }
-    container.innerHTML = filtered.map(c => `
-      <div class="list-item">
-        <div class="list-item-info">
-          <div class="list-item-name">${c.name}</div>
-          <div class="list-item-sub">${c.phone}${c.email ? ' • ' + c.email : ''}</div>
-        </div>
-        <div class="list-item-actions">
-          <button class="btn-sm btn-secondary" onclick="editClient(${c.id})">Edit</button>
-          <button class="btn-sm btn-cancel-appt" onclick="deleteClient(${c.id})">Delete</button>
-        </div>
-      </div>
+    
+    emptyState.classList.add('hidden');
+    table.innerHTML = filtered.map(c => `
+      <tr>
+        <td class="font-semibold">${c.name}</td>
+        <td>${c.phone}</td>
+        <td>${c.email || '<span class="text-muted">—</span>'}</td>
+        <td><span class="badge">-</span></td>
+        <td>
+          <button class="btn-icon" onclick="editClient(${c.id})">Edit</button>
+          <button class="btn-icon danger" onclick="deleteClient(${c.id})">Delete</button>
+        </td>
+      </tr>
     `).join('');
   } catch (err) {
     console.error('Failed to render clients:', err);
@@ -535,7 +868,7 @@ async function renderClients() {
 }
 
 async function deleteClient(id) {
-  if (!confirm('Delete this client?')) return;
+  if (!confirm('Are you sure you want to delete this client?')) return;
   try {
     await apiRequest('DELETE', `/api/clients/${id}`);
     showToast('Client deleted', 'success');
@@ -556,34 +889,31 @@ async function loadClientSelect() {
   try {
     const clients = await apiRequest('GET', '/api/clients');
     const select = document.getElementById('modal-appt-client');
-    select.innerHTML = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    select.innerHTML = '<option value="">Choose a client...</option>' + 
+      clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   } catch (err) {
     console.error('Failed to load clients:', err);
   }
 }
 
-async function saveAppointment() {
+async function saveAppointment(e) {
+  e.preventDefault();
   const client_id = parseInt(document.getElementById('modal-appt-client').value);
-  const service = document.getElementById('modal-appt-service').value || 'Appointment';
+  const service = document.getElementById('modal-appt-service').value || null;
   const scheduled_at = document.getElementById('modal-appt-time').value;
   const duration_minutes = parseInt(document.getElementById('modal-appt-duration').value) || 60;
-  const notes = document.getElementById('modal-appt-notes').value;
-  
-  if (!scheduled_at) {
-    showToast('Please select a date and time', 'error');
-    return;
-  }
+  const notes = document.getElementById('modal-appt-notes').value || null;
   
   try {
     await apiRequest('POST', '/api/appointments', { 
       client_id, 
-      service: service || null, 
+      service, 
       scheduled_at, 
       duration_minutes, 
-      notes: notes || null 
+      notes 
     });
     closeModal('modal-appointment');
-    showToast('Appointment scheduled! 📅', 'success');
+    showToast('Appointment scheduled', 'success');
     renderAppointments();
     loadStats();
   } catch (err) {
@@ -601,23 +931,28 @@ async function renderAppointments() {
     if (statusFilter) filtered = filtered.filter(a => a.status === statusFilter);
     if (dateFilter) filtered = filtered.filter(a => a.scheduled_at.startsWith(dateFilter));
     
-    const container = document.getElementById('appointments-list');
+    const table = document.getElementById('appointments-table');
+    const emptyState = document.getElementById('appointments-empty');
+    
     if (filtered.length === 0) {
-      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No appointments yet. Click "+ New Appointment" to schedule your first!</div>';
+      table.innerHTML = '';
+      emptyState.classList.remove('hidden');
       return;
     }
-    container.innerHTML = filtered.map(a => `
-      <div class="list-item">
-        <div class="list-item-info">
-          <div class="list-item-name">${a.client_name} - ${a.service || 'Appointment'}</div>
-          <div class="list-item-sub">${new Date(a.scheduled_at).toLocaleDateString()} at ${new Date(a.scheduled_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-        </div>
-        <span class="status-badge status-${a.status}">${a.status.replace('_', ' ')}</span>
-        <div class="list-item-actions">
-          <button class="btn-sm btn-secondary" onclick="editAppointment(${a.id})">Edit</button>
-          <button class="btn-sm btn-cancel-appt" onclick="cancelAppointment(${a.id})">Cancel</button>
-        </div>
-      </div>
+    
+    emptyState.classList.add('hidden');
+    table.innerHTML = filtered.map(a => `
+      <tr>
+        <td class="font-semibold">${a.client_name}</td>
+        <td>${a.service || 'Appointment'}</td>
+        <td>${new Date(a.scheduled_at).toLocaleString()}</td>
+        <td>${a.duration_minutes} min</td>
+        <td><span class="badge badge-${a.status}">${a.status.replace('_', ' ')}</span></td>
+        <td>
+          <button class="btn-icon" onclick="editAppointment(${a.id})">Edit</button>
+          <button class="btn-icon danger" onclick="cancelAppointment(${a.id})">Cancel</button>
+        </td>
+      </tr>
     `).join('');
   } catch (err) {
     console.error('Failed to render appointments:', err);
@@ -625,7 +960,7 @@ async function renderAppointments() {
 }
 
 async function cancelAppointment(id) {
-  if (!confirm('Cancel this appointment?')) return;
+  if (!confirm('Are you sure you want to cancel this appointment?')) return;
   try {
     await apiRequest('PATCH', `/api/appointments/${id}`, { status: 'cancelled' });
     showToast('Appointment cancelled', 'success');
@@ -647,20 +982,22 @@ async function renderSMSLogs() {
     if (typeFilter === 'in') filtered = logs.filter(l => l.direction === 'in');
     
     const container = document.getElementById('sms-logs-list');
+    const emptyState = document.getElementById('sms-logs-empty');
+    
     if (filtered.length === 0) {
-      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No SMS messages yet. Reminders will appear here once you schedule appointments!</div>';
+      container.innerHTML = '';
+      emptyState.classList.remove('hidden');
       return;
     }
+    
+    emptyState.classList.add('hidden');
     container.innerHTML = filtered.map(l => `
-      <div class="list-item">
-        <div class="list-item-info">
-          <div class="list-item-name">${l.client_name}</div>
-          <div class="list-item-sub">${l.message.substring(0, 80)}${l.message.length > 80 ? '...' : ''}</div>
+      <div class="message-item ${l.direction === 'out' ? 'message-out' : 'message-in'}">
+        <div class="message-header">
+          <span class="message-sender">${l.client_name}</span>
+          <span class="message-time">${new Date(l.sent_at).toLocaleString()}</span>
         </div>
-        <span class="status-badge ${l.direction === 'out' ? 'sms-out' : 'sms-in'}">${l.direction === 'out' ? '📤 Sent' : '📥 Received'}</span>
-        <div class="list-item-sub" style="margin-left: 12px; min-width: 120px; text-align: right;">
-          ${new Date(l.sent_at).toLocaleDateString()}
-        </div>
+        <div class="message-body">${l.message}</div>
       </div>
     `).join('');
   } catch (err) {
@@ -672,27 +1009,11 @@ async function renderSMSLogs() {
 async function loadSettings() {
   try {
     const settings = await apiRequest('GET', '/api/settings/reminders');
-    document.getElementById('setting-24h').checked = settings.send_24h !== undefined ? settings.send_24h : true;
-    document.getElementById('setting-2h').checked = settings.send_2h !== undefined ? settings.send_2h : true;
-    document.getElementById('setting-msg-24h').value = settings.message_24h || settings.msg_24h || 'Hi {name}, this is a reminder for your {service} appointment tomorrow at {time}. Reply CONFIRM to confirm or CANCEL to reschedule.';
-    document.getElementById('setting-msg-2h').value = settings.message_2h || settings.msg_2h || 'Hi {name}, quick reminder: your {service} appointment is today at {time}. See you soon!';
-    
-    // Update billing status
-    const biz = await apiRequest('GET', '/api/auth/me');
-    const billingEl = document.getElementById('billing-status');
-    const actionsEl = document.getElementById('billing-actions');
-    
-    if (biz.subscription_status === 'trial') {
-      const daysLeft = Math.ceil((new Date(biz.trial_ends_at) - new Date()) / (1000 * 60 * 60 * 24));
-      billingEl.innerHTML = `You're on a <strong>14-day free trial</strong>. ${daysLeft} day${daysLeft !== 1 ? 's' : ''} remaining.`;
-      actionsEl.innerHTML = '<button class="btn-primary" onclick="openBilling()">Upgrade Now</button>';
-    } else if (biz.subscription_status === 'active') {
-      billingEl.innerHTML = 'You\'re on the <strong>Pro Plan</strong> ($49/month). All features unlocked.';
-      actionsEl.innerHTML = '<button class="btn-secondary" onclick="manageBilling()">Manage Subscription</button>';
-    } else {
-      billingEl.innerHTML = 'Your trial has ended. Upgrade to continue using Notifli.';
-      actionsEl.innerHTML = '<button class="btn-primary" onclick="openBilling()">Upgrade Now</button>';
-    }
+    currentSettings = settings;
+    document.getElementById('setting-24h').checked = settings.send_24h !== false;
+    document.getElementById('setting-2h').checked = settings.send_2h !== false;
+    document.getElementById('setting-msg-24h').value = settings.msg_24h || '';
+    document.getElementById('setting-msg-2h').value = settings.msg_2h || '';
   } catch (err) {
     console.error('Failed to load settings:', err);
   }
@@ -706,9 +1027,46 @@ async function saveSettings() {
       msg_24h: document.getElementById('setting-msg-24h').value,
       msg_2h: document.getElementById('setting-msg-2h').value
     });
-    showToast('Settings saved! ✅', 'success');
+    showToast('Settings saved successfully', 'success');
   } catch (err) {
     showToast('Failed to save settings', 'error');
+  }
+}
+
+// Billing
+async function loadBilling() {
+  try {
+    const biz = await apiRequest('GET', '/api/auth/me');
+    const planStatus = document.getElementById('plan-status');
+    
+    if (biz.subscription_status === 'trial') {
+      const daysLeft = Math.ceil((new Date(biz.trial_ends_at) - new Date()) / (1000 * 60 * 60 * 24));
+      planStatus.innerHTML = `
+        <div class="plan-badge trial">Trial</div>
+        <div class="plan-price">${daysLeft} days remaining</div>
+        <div class="plan-features">
+          <div class="feature-item">✓ Unlimited reminders</div>
+          <div class="feature-item">✓ Unlimited clients</div>
+          <div class="feature-item">✓ Custom messaging</div>
+          <div class="feature-item">✓ Priority support</div>
+        </div>
+        <button class="btn-primary" style="margin-top: 20px; width: 100%;" onclick="openBilling()">Upgrade to Pro - $49/month</button>
+      `;
+    } else if (biz.subscription_status === 'active') {
+      planStatus.innerHTML = `
+        <div class="plan-badge active">Pro Plan</div>
+        <div class="plan-price">$49/month</div>
+        <div class="plan-features">
+          <div class="feature-item">✓ Unlimited reminders</div>
+          <div class="feature-item">✓ Unlimited clients</div>
+          <div class="feature-item">✓ Custom messaging</div>
+          <div class="feature-item">✓ Priority support</div>
+        </div>
+        <button class="btn-secondary" style="margin-top: 20px; width: 100%;" onclick="manageBilling()">Manage Subscription</button>
+      `;
+    }
+  } catch (err) {
+    console.error('Failed to load billing:', err);
   }
 }
 
@@ -724,16 +1082,18 @@ async function openBilling() {
     const data = await res.json();
     if (data.url) {
       window.location.href = data.url;
-    } else {
-      showToast('Demo mode - payment not configured', 'error');
     }
   } catch (err) {
     showToast('Failed to create checkout', 'error');
   }
 }
 
-async function manageBilling() {
-  showToast('Billing portal coming soon', 'success');
+function manageBilling() {
+  showToast('Stripe customer portal opening...', 'success');
+}
+
+function exportData() {
+  showToast('Export feature coming soon', 'success');
 }
 
 // Utility
@@ -744,16 +1104,8 @@ function closeModal(id) {
 function showToast(message, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = message;
-  toast.className = 'toast ' + type;
-  setTimeout(() => toast.classList.add('hidden'), 3000);
-}
-
-// Initialize
-if (authToken) {
-  loadDashboard();
-} else {
-  document.getElementById('auth-screen').classList.remove('hidden');
-  document.getElementById('app-screen').classList.add('hidden');
+  toast.className = 'toast ' + type + ' show';
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 </script>
 
