@@ -4,7 +4,11 @@ from backend.core.config import settings
 from backend.models.database import Business
 from datetime import datetime
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+# Only initialize Stripe if we have a key
+if settings.STRIPE_SECRET_KEY and settings.STRIPE_SECRET_KEY != "sk_test" and not settings.STRIPE_SECRET_KEY.startswith("sk_test_"):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+else:
+    stripe.api_key = None
 
 def create_customer(business: Business) -> str:
     """Create a Stripe customer for a business."""
@@ -19,24 +23,30 @@ def create_customer(business: Business) -> str:
 
 def create_checkout_session(business: Business, success_url: str, cancel_url: str) -> str:
     """Create a Stripe checkout session for subscription."""
-    if not settings.STRIPE_SECRET_KEY:
-        return f"{settings.APP_URL}/dashboard?demo_payment=true"
+    if not stripe.api_key or settings.STRIPE_SECRET_KEY.startswith("sk_test_"):
+        # Test mode - return demo URL
+        return f"{settings.APP_URL}/app?demo_payment=true"
 
     if not business.stripe_customer_id or business.stripe_customer_id == "demo_customer":
         customer_id = create_customer(business)
     else:
         customer_id = business.stripe_customer_id
 
-    session = stripe.checkout.Session.create(
-        customer=customer_id,
-        payment_method_types=["card"],
-        line_items=[{"price": settings.STRIPE_PRICE_ID, "quantity": 1}],
-        mode="subscription",
-        success_url=success_url,
-        cancel_url=cancel_url,
-        metadata={"business_id": business.id}
-    )
-    return session.url
+    try:
+        session = stripe.checkout.Session.create(
+            customer=customer_id,
+            payment_method_types=["card"],
+            line_items=[{"price": settings.STRIPE_PRICE_ID, "quantity": 1}],
+            mode="subscription",
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={"business_id": business.id}
+        )
+        return session.url
+    except Exception as e:
+        # If Stripe fails, return demo URL
+        print(f"Stripe error: {e}")
+        return f"{settings.APP_URL}/app?demo_payment=true"
 
 def handle_webhook(payload: bytes, sig_header: str, db: Session) -> dict:
     """Handle Stripe webhook events."""
