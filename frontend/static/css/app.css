@@ -28,6 +28,47 @@ body {
   overflow-x: hidden;
 }
 
+
+/* SVG Icon Styles */
+.nav-svg {
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.nav-link.active .nav-svg {
+  color: var(--white);
+}
+
+.metric-svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+}
+
+.inline-svg {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.inline-svg.check {
+  color: var(--green);
+}
+
+.inline-svg.x {
+  color: var(--red);
+}
+
+/* Ensure SVGs inherit color in buttons */
+button svg, .btn-primary svg, .btn-secondary svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
 /* Background effects */
 #auth-screen::before, #auth-screen::after,
 #app-screen::before, #app-screen::after {
