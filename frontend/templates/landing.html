@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notifli — Stop Losing Money to No-Shows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --purple:#7c3aed; --purple-light:#a78bfa; --purple-dark:#5b21b6;
+      --green:#10b981; --pink:#ec4899; --yellow:#f59e0b;
+      --dark:#0f0a1e; --dark2:#1a1035; --card:#1e1535;
+      --text:#e2d9f3; --muted:#9ca3af; --white:#ffffff;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 6%;backdrop-filter:blur(12px);background:rgba(15,10,30,0.85);border-bottom:1px solid rgba(124,58,237,0.15);transition:all 0.3s;}
+    nav.scrolled{padding:12px 6%;background:rgba(15,10,30,0.98);}
+    .nav-logo{font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .nav-links{display:flex;gap:28px;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;font-weight:500;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--white);}
+    .nav-cta{display:flex;gap:10px;align-items:center;}
+    .btn-ghost{color:var(--text);background:transparent;border:1px solid rgba(124,58,237,0.4);padding:8px 18px;border-radius:8px;font-size:0.85rem;cursor:pointer;font-family:inherit;transition:all 0.2s;}
+    .btn-ghost:hover{border-color:var(--purple-light);color:var(--white);}
+    .btn-primary{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(124,58,237,0.4);}
+
+    /* HERO */
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 6% 60px;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,0.25) 0%,transparent 70%);position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(236,72,153,0.1) 0%,transparent 70%);top:15%;right:-8%;border-radius:50%;animation:float 8s ease-in-out infinite;}
+    .hero::after{content:'';position:absolute;width:350px;height:350px;background:radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%);bottom:10%;left:-5%;border-radius:50%;animation:float 6s ease-in-out infinite reverse;}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-28px)}}
+    .hero-inner{position:relative;z-index:1;width:100%;max-width:900px;margin:0 auto;}
+
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);padding:6px 16px;border-radius:100px;font-size:0.8rem;color:var(--purple-light);margin-bottom:24px;animation:fadeUp 0.6s ease;}
+    .badge-dot{background:var(--purple);border-radius:50%;width:6px;height:6px;display:inline-block;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+    /* Industry selector */
+    .industry-selector{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;animation:fadeUp 0.65s ease;}
+    .ind-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--muted);padding:6px 14px;border-radius:100px;font-size:0.8rem;cursor:pointer;font-family:inherit;transition:all 0.2s;}
+    .ind-btn:hover,.ind-btn.active{background:rgba(124,58,237,0.2);border-color:var(--purple-light);color:var(--white);}
+
+    .hero h1{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:900;line-height:1.1;color:var(--white);margin-bottom:20px;animation:fadeUp 0.7s ease;}
+    .gradient-text{background:linear-gradient(135deg,#a78bfa,#ec4899,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gradShift 4s ease infinite;}
+    @keyframes gradShift{0%,100%{background-position:0%}50%{background-position:100%}}
+    .hero p.subhead{font-size:1.1rem;color:var(--muted);max-width:560px;margin:0 auto 32px;line-height:1.7;animation:fadeUp 0.75s ease;}
+
+    .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;animation:fadeUp 0.8s ease;}
+    .btn-hero{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;padding:15px 34px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s;box-shadow:0 4px 24px rgba(124,58,237,0.4);}
+    .btn-hero:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,0.5);}
+    .btn-hero-outline{background:rgba(255,255,255,0.07);color:var(--white);border:1px solid rgba(255,255,255,0.15);padding:15px 34px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.3s;}
+    .btn-hero-outline:hover{background:rgba(255,255,255,0.12);}
+    .no-cc{font-size:0.78rem;color:var(--muted);margin-bottom:36px;animation:fadeUp 0.82s ease;}
+    .no-cc span{color:var(--green);}
+
+    /* Live counter */
+    .live-counter{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);padding:6px 16px;border-radius:100px;font-size:0.82rem;color:var(--green);margin-bottom:28px;animation:fadeUp 0.63s ease;}
+    .live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite;}
+
+    /* Phone mockup */
+    .hero-phone{max-width:300px;margin:0 auto 36px;animation:fadeUp 0.85s ease;}
+    .phone-frame{background:linear-gradient(145deg,#2a1f4e,#1a1035);border-radius:34px;padding:10px;border:1px solid rgba(124,58,237,0.3);box-shadow:0 24px 80px rgba(0,0,0,0.5);}
+    .phone-screen{background:#0f0a1e;border-radius:26px;padding:18px;}
+    .phone-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+    .p-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;}
+    .p-name{font-size:0.88rem;font-weight:600;color:var(--white);}
+    .p-status{font-size:0.68rem;color:var(--green);}
+    .sms-out{background:linear-gradient(135deg,var(--purple),#6d28d9);color:#fff;border-radius:14px 14px 4px 14px;padding:9px 13px;font-size:0.8rem;line-height:1.5;margin-bottom:8px;}
+    .sms-in{background:rgba(255,255,255,0.08);color:var(--text);border-radius:14px 14px 14px 4px;padding:9px 13px;font-size:0.8rem;line-height:1.5;margin-bottom:8px;max-width:85%;}
+    .sms-time{font-size:0.62rem;color:var(--muted);text-align:right;margin-bottom:6px;}
+    .typing{display:flex;gap:4px;padding:9px 13px;background:rgba(255,255,255,0.06);border-radius:14px;width:fit-content;}
+    .typing span{width:5px;height:5px;background:var(--muted);border-radius:50%;animation:typeDot 1.2s infinite;}
+    .typing span:nth-child(2){animation-delay:.2s;}
+    .typing span:nth-child(3){animation-delay:.4s;}
+    @keyframes typeDot{0%,80%,100%{transform:scale(0.7);opacity:0.4}40%{transform:scale(1);opacity:1}}
+
+    /* Stats */
+    .stats-bar{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;animation:fadeUp 0.9s ease;}
+    .stat-item{text-align:center;}
+    .stat-num{font-size:1.9rem;font-weight:900;color:var(--white);}
+    .stat-lbl{font-size:0.75rem;color:var(--muted);margin-top:2px;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* LOGOS */
+    .logos-bar{padding:28px 6%;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);text-align:center;}
+    .logos-lbl{font-size:0.75rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+    .logos-row{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;}
+    .biz-pill{font-size:0.9rem;font-weight:600;color:rgba(255,255,255,0.3);transition:color 0.2s;cursor:default;}
+    .biz-pill:hover{color:rgba(255,255,255,0.65);}
+
+    /* SECTIONS */
+    .section{padding:88px 6%;}
+    .sec-label{font-size:0.75rem;font-weight:700;color:var(--purple-light);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+    .sec-title{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:800;color:var(--white);margin-bottom:14px;line-height:1.2;}
+    .sec-sub{font-size:0.97rem;color:var(--muted);max-width:540px;line-height:1.7;}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* ROI CALCULATOR */
+    .roi-section{padding:88px 6%;background:linear-gradient(180deg,transparent,rgba(124,58,237,0.06),transparent);}
+    .roi-container{max-width:860px;margin:0 auto;}
+    .roi-card{background:var(--card);border-radius:20px;padding:40px;border:1px solid rgba(124,58,237,0.2);box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+    .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+    .roi-inputs{display:flex;flex-direction:column;gap:20px;}
+    .roi-input-group label{display:block;font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:500;}
+    .roi-slider{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;background:rgba(124,58,237,0.2);outline:none;}
+    .roi-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));cursor:pointer;box-shadow:0 2px 8px rgba(124,58,237,0.5);}
+    .roi-val{font-size:1.1rem;font-weight:700;color:var(--white);margin-top:4px;}
+    .roi-result{text-align:center;background:rgba(124,58,237,0.1);border-radius:16px;padding:32px;border:1px solid rgba(124,58,237,0.2);}
+    .roi-loss{font-size:3rem;font-weight:900;color:#ef4444;line-height:1;}
+    .roi-loss-label{font-size:0.85rem;color:var(--muted);margin:8px 0 20px;}
+    .roi-save{font-size:1.8rem;font-weight:900;color:var(--green);}
+    .roi-save-label{font-size:0.85rem;color:var(--muted);margin-bottom:20px;}
+    .roi-cta-note{font-size:0.8rem;color:var(--muted);}
+    .roi-cta-note span{color:var(--green);}
+
+    /* PROBLEM */
+    .problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:48px;}
+    .prob-card{background:var(--card);border-radius:16px;padding:26px;border:1px solid rgba(255,255,255,0.06);transition:all 0.3s;}
+    .prob-card:hover{transform:translateY(-4px);border-color:rgba(124,58,237,0.35);}
+    .prob-card::before{content:'';display:block;width:100%;height:2px;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:2px;margin-bottom:18px;opacity:0;transition:opacity 0.3s;}
+    .prob-card:hover::before{opacity:1;}
+    .prob-stat{font-size:2.2rem;font-weight:900;color:#ef4444;margin-bottom:6px;}
+    .prob-card h3{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+    .prob-card p{font-size:0.87rem;color:var(--muted);line-height:1.6;}
+
+    /* HOW IT WORKS */
+    .hiw{padding:88px 6%;background:linear-gradient(180deg,transparent,rgba(124,58,237,0.04),transparent);}
+    .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;margin-top:56px;position:relative;}
+    .steps::before{content:'';position:absolute;top:38px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);}
+    .step{text-align:center;}
+    .step-icon{width:76px;height:76px;border-radius:50%;margin:0 auto 18px;background:linear-gradient(135deg,var(--purple-dark),var(--purple));border:2px solid rgba(124,58,237,0.4);display:flex;align-items:center;justify-content:center;font-size:1.7rem;position:relative;z-index:1;box-shadow:0 0 28px rgba(124,58,237,0.3);transition:box-shadow 0.3s;}
+    .step:hover .step-icon{box-shadow:0 0 48px rgba(124,58,237,0.6);}
+    .step h3{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+    .step p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+    /* LIVE DEMO */
+    .demo-section{padding:88px 6%;}
+    .demo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;max-width:1080px;margin:0 auto;}
+    .demo-feats{display:flex;flex-direction:column;gap:14px;margin-top:28px;}
+    .demo-feat{display:flex;gap:12px;align-items:flex-start;}
+    .df-icon{width:38px;height:38px;border-radius:10px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+    .df-text h4{font-size:0.9rem;font-weight:600;color:var(--white);margin-bottom:3px;}
+    .df-text p{font-size:0.82rem;color:var(--muted);line-height:1.5;}
+    .sms-demo-box{background:var(--card);border-radius:18px;padding:22px;border:1px solid rgba(124,58,237,0.2);box-shadow:0 16px 48px rgba(0,0,0,0.4);}
+    .sdemo-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .sdemo-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#059669);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.85rem;}
+    .sdemo-name{font-weight:600;color:var(--white);font-size:0.9rem;}
+    .sdemo-sub{font-size:0.72rem;color:var(--green);}
+    .sdemo-live{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--green);}
+    .sdemo-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite;}
+    .demo-msgs{min-height:160px;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+    .demo-row{display:flex;gap:8px;margin-bottom:6px;}
+    .demo-select{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:0.82rem;outline:none;}
+    .demo-send{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;padding:9px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.82rem;transition:transform 0.2s;}
+    .demo-send:hover{transform:scale(1.04);}
+    .demo-hint{font-size:0.72rem;color:var(--muted);margin-top:6px;}
+
+    /* PRICING */
+    .pricing-sect{padding:88px 6%;background:linear-gradient(180deg,transparent,rgba(124,58,237,0.04),transparent);}
+    .pricing-toggle{display:flex;align-items:center;gap:12px;justify-content:center;margin:32px 0;}
+    .toggle-label{font-size:0.9rem;color:var(--muted);}
+    .toggle-label.active{color:var(--white);font-weight:600;}
+    .toggle-switch{position:relative;width:52px;height:26px;cursor:pointer;}
+    .toggle-switch input{opacity:0;width:0;height:0;}
+    .toggle-track{position:absolute;inset:0;background:rgba(124,58,237,0.3);border-radius:13px;transition:background 0.3s;border:1px solid rgba(124,58,237,0.5);}
+    .toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform 0.3s;}
+    .toggle-switch input:checked + .toggle-track{background:var(--purple);}
+    .toggle-switch input:checked ~ .toggle-thumb{transform:translateX(26px);}
+    .annual-badge{background:linear-gradient(135deg,var(--green),#059669);color:#fff;font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:100px;margin-left:6px;}
+    .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;max-width:940px;margin:0 auto;}
+    .price-card{background:var(--card);border-radius:18px;padding:32px;border:1px solid rgba(255,255,255,0.07);position:relative;transition:all 0.3s;}
+    .price-card:hover{transform:translateY(-4px);}
+    .price-card.popular{border-color:var(--purple);background:linear-gradient(145deg,#1e1535,#2a1855);box-shadow:0 0 50px rgba(124,58,237,0.18);}
+    .pop-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-size:0.72rem;font-weight:700;padding:3px 14px;border-radius:100px;white-space:nowrap;}
+    .plan-tier{font-size:0.78rem;font-weight:700;color:var(--purple-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+    .plan-price-wrap{margin-bottom:12px;}
+    .plan-price{font-size:2.8rem;font-weight:900;color:var(--white);line-height:1;}
+    .plan-price sup{font-size:1.2rem;vertical-align:top;margin-top:8px;}
+    .plan-period{font-size:0.85rem;color:var(--muted);}
+    .plan-annual-note{font-size:0.75rem;color:var(--green);margin-top:4px;min-height:18px;}
+    .plan-desc{font-size:0.83rem;color:var(--muted);margin-bottom:22px;line-height:1.5;}
+    .plan-feats{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+    .plan-feats li{display:flex;align-items:center;gap:9px;font-size:0.87rem;color:var(--text);}
+    .plan-feats li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+    .plan-feats li.off{color:#4b5563;}
+    .plan-feats li.off::before{content:'✕';color:#374151;}
+    .btn-plan{width:100%;padding:13px;border-radius:9px;font-size:0.92rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.3s;margin-bottom:8px;}
+    .btn-outline-plan{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.2);}
+    .btn-outline-plan:hover{background:rgba(255,255,255,0.07);}
+    .btn-fill-plan{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;box-shadow:0 4px 18px rgba(124,58,237,0.3);}
+    .btn-fill-plan:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,0.45);}
+    .plan-no-cc{font-size:0.73rem;color:var(--muted);text-align:center;}
+    .plan-no-cc span{color:var(--green);}
+
+    /* COMPARISON TABLE */
+    .compare-wrap{max-width:860px;margin:48px auto 0;overflow-x:auto;}
+    .compare-table{width:100%;border-collapse:collapse;font-size:0.87rem;}
+    .compare-table th{padding:14px 16px;text-align:center;font-weight:600;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.08);}
+    .compare-table th:first-child{text-align:left;}
+    .compare-table th.hl{color:var(--purple-light);}
+    .compare-table td{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,0.05);text-align:center;color:var(--muted);}
+    .compare-table td:first-child{text-align:left;color:var(--text);font-weight:500;}
+    .compare-table tr:hover td{background:rgba(124,58,237,0.04);}
+    .check{color:var(--green);font-size:1rem;}
+    .cross{color:#374151;font-size:0.9rem;}
+    .hl-col{background:rgba(124,58,237,0.07);}
+
+    /* TESTIMONIALS */
+    .testi-section{padding:88px 6%;}
+    .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;margin-top:48px;}
+    .testi-card{background:var(--card);border-radius:16px;padding:26px;border:1px solid rgba(255,255,255,0.06);transition:all 0.3s;}
+    .testi-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-3px);}
+    .testi-stars{color:#f59e0b;font-size:0.82rem;letter-spacing:2px;margin-bottom:12px;}
+    .testi-quote{font-size:0.92rem;color:var(--text);line-height:1.7;margin-bottom:18px;font-style:italic;}
+    .testi-auth{display:flex;align-items:center;gap:10px;}
+    .testi-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.85rem;flex-shrink:0;}
+    .testi-nm{font-weight:600;color:var(--white);font-size:0.88rem;}
+    .testi-role{font-size:0.75rem;color:var(--muted);}
+
+    /* FAQ */
+    .faq-section{padding:88px 6%;}
+    .faq-wrap{max-width:720px;margin:48px auto 0;}
+    .faq-item{border-bottom:1px solid rgba(255,255,255,0.07);}
+    .faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 0;cursor:pointer;font-size:0.97rem;font-weight:600;color:var(--white);transition:color 0.2s;gap:12px;}
+    .faq-q:hover{color:var(--purple-light);}
+    .faq-arrow{font-size:1.2rem;color:var(--purple-light);transition:transform 0.3s;flex-shrink:0;}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s;}
+    .faq-a p{padding-bottom:18px;font-size:0.9rem;color:var(--muted);line-height:1.7;}
+    .faq-item.open .faq-arrow{transform:rotate(45deg);}
+    .faq-item.open .faq-a{max-height:300px;}
+
+    /* CTA */
+    .cta-section{padding:88px 6%;text-align:center;background:linear-gradient(135deg,rgba(124,58,237,0.14),rgba(236,72,153,0.09));border-top:1px solid rgba(124,58,237,0.18);}
+    .cta-section h2{font-size:clamp(1.7rem,3.5vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:14px;}
+    .cta-section p{font-size:1rem;color:var(--muted);max-width:480px;margin:0 auto 32px;}
+    .cta-form{display:flex;gap:10px;max-width:440px;margin:0 auto 12px;flex-wrap:wrap;justify-content:center;}
+    .cta-input{flex:1;min-width:200px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:13px 16px;border-radius:10px;font-family:inherit;font-size:0.92rem;outline:none;}
+    .cta-input::placeholder{color:var(--muted);}
+    .cta-input:focus{border-color:var(--purple-light);}
+    .cta-note{font-size:0.77rem;color:var(--muted);}
+    .cta-note span{color:var(--green);}
+
+    /* FOOTER */
+    footer{padding:48px 6% 28px;border-top:1px solid rgba(255,255,255,0.06);}
+    .foot-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:28px;margin-bottom:36px;}
+    .foot-brand p{font-size:0.83rem;color:var(--muted);margin-top:8px;max-width:240px;line-height:1.6;}
+    .foot-links{display:flex;gap:40px;flex-wrap:wrap;}
+    .foot-col h4{font-size:0.75rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+    .foot-col a{display:block;font-size:0.83rem;color:var(--muted);text-decoration:none;margin-bottom:7px;transition:color 0.2s;}
+    .foot-col a:hover{color:var(--white);}
+    .foot-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .foot-bottom p{font-size:0.8rem;color:var(--muted);}
+
+    /* EXIT POPUP */
+    .exit-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+    .exit-overlay.show{opacity:1;pointer-events:all;}
+    .exit-box{background:var(--dark2);border-radius:20px;padding:40px;max-width:460px;width:90%;border:1px solid rgba(124,58,237,0.3);box-shadow:0 24px 80px rgba(0,0,0,0.6);text-align:center;position:relative;}
+    .exit-close{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;}
+    .exit-box h3{font-size:1.5rem;font-weight:800;color:var(--white);margin-bottom:10px;}
+    .exit-box p{font-size:0.92rem;color:var(--muted);margin-bottom:24px;line-height:1.6;}
+    .exit-offer{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:14px;font-size:0.9rem;color:var(--green);font-weight:600;margin-bottom:20px;}
+
+    /* CHAT BUBBLE */
+    .chat-bubble{position:fixed;bottom:28px;right:28px;z-index:200;}
+    .chat-btn{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 20px rgba(124,58,237,0.5);transition:transform 0.2s;}
+    .chat-btn:hover{transform:scale(1.1);}
+    .chat-window{position:absolute;bottom:68px;right:0;width:300px;background:var(--dark2);border-radius:16px;border:1px solid rgba(124,58,237,0.25);box-shadow:0 16px 48px rgba(0,0,0,0.4);overflow:hidden;display:none;}
+    .chat-window.open{display:block;}
+    .chat-head{background:linear-gradient(135deg,var(--purple),var(--pink));padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+    .chat-head span{font-weight:700;color:#fff;font-size:0.92rem;}
+    .chat-head small{font-size:0.72rem;color:rgba(255,255,255,0.8);}
+    .chat-close{background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;}
+    .chat-body{padding:16px;font-size:0.85rem;color:var(--text);line-height:1.6;}
+    .chat-msg{background:rgba(124,58,237,0.12);border-radius:10px;padding:10px 12px;margin-bottom:10px;}
+    .chat-form{display:flex;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.08);}
+    .chat-inp{flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;color:#fff;font-family:inherit;font-size:0.82rem;outline:none;}
+    .chat-submit{background:var(--purple);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:0.82rem;font-weight:600;}
+
+    @media(max-width:768px){
+      .nav-links{display:none;}
+      .demo-wrap{grid-template-columns:1fr;}
+      .roi-grid{grid-template-columns:1fr;}
+      .steps::before{display:none;}
+      .cta-form{flex-direction:column;}
+      .foot-links{gap:20px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">Notifli</div>
+  <ul class="nav-links">
+    <li><a href="#problem">Why Notifli</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#roi">ROI Calculator</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-ghost" onclick="window.location.href='/app'">Log In</button>
+    <button class="btn-primary" onclick="window.location.href='/app'">Start Free Trial</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="live-counter">
+      <div class="live-dot"></div>
+      <span><b id="counter-num">2,847</b> reminders sent today</span>
+    </div>
+    <div class="hero-badge"><span class="badge-dot"></span> AI-Powered SMS Reminders for Small Businesses</div>
+
+    <!-- Industry selector -->
+    <div class="industry-selector">
+      <button class="ind-btn active" onclick="setIndustry('salon',this)">💅 Salon</button>
+      <button class="ind-btn" onclick="setIndustry('barbershop',this)">✂️ Barbershop</button>
+      <button class="ind-btn" onclick="setIndustry('dental',this)">🦷 Dental</button>
+      <button class="ind-btn" onclick="setIndustry('gym',this)">💪 Gym</button>
+      <button class="ind-btn" onclick="setIndustry('tattoo',this)">🖋 Tattoo</button>
+      <button class="ind-btn" onclick="setIndustry('spa',this)">💆 Spa</button>
+      <button class="ind-btn" onclick="setIndustry('vet',this)">🐾 Vet</button>
+    </div>
+
+    <h1 id="hero-headline">Stop Losing <span class="gradient-text">$2,400/Month</span><br>to Salon No-Shows</h1>
+    <p class="subhead" id="hero-sub">Notifli automatically texts your salon clients 24h and 2h before every appointment. They confirm or cancel instantly — you never get blindsided by an empty chair again.</p>
+
+    <div class="hero-phone">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-hdr">
+            <div class="p-avatar">N</div>
+            <div><div class="p-name">Notifli</div><div class="p-status">● Sending reminders</div></div>
+          </div>
+          <div id="hero-msgs">
+            <div class="sms-out">Hi Jasmine! 💅 Your Balayage at <b>Glow Studio</b> is <b>tomorrow at 2PM</b>. Reply <b>CONFIRM</b> or <b>CANCEL</b> ✨</div>
+            <div class="sms-time">Delivered ✓✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-btns">
+      <button class="btn-hero" onclick="window.location.href='/app'">Start Free — 14 Days Free</button>
+      <button class="btn-hero-outline" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">▶ See Live Demo</button>
+    </div>
+    <div class="no-cc"><span>✓</span> No credit card required &nbsp;·&nbsp; <span>✓</span> Setup in 2 minutes &nbsp;·&nbsp; <span>✓</span> Cancel anytime</div>
+
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-num">50%</div><div class="stat-lbl">Fewer No-Shows</div></div>
+      <div class="stat-item"><div class="stat-num">$2k+</div><div class="stat-lbl">Saved Per Month</div></div>
+      <div class="stat-item"><div class="stat-num">2min</div><div class="stat-lbl">To Set Up</div></div>
+      <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-lbl">Auto Reminders</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-bar">
+  <div class="logos-lbl">Perfect for these businesses</div>
+  <div class="logos-row">
+    <span class="biz-pill">💇 Barbershops</span>
+    <span class="biz-pill">💅 Salons</span>
+    <span class="biz-pill">🦷 Dental Clinics</span>
+    <span class="biz-pill">💪 Gyms & Fitness</span>
+    <span class="biz-pill">🐾 Veterinary</span>
+    <span class="biz-pill">⚖️ Consulting</span>
+    <span class="biz-pill">🖋 Tattoo Studios</span>
+    <span class="biz-pill">💆 Spas</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section" id="problem">
+  <div class="reveal" style="text-align:center;max-width:600px;margin:0 auto 0">
+    <div class="sec-label">The Real Problem</div>
+    <div class="sec-title">No-shows are quietly<br>draining your business</div>
+    <div class="sec-sub" style="margin:0 auto">Every empty slot is money you worked for but never received. And it's happening more often than you realize.</div>
+  </div>
+  <div class="problem-grid">
+    <div class="prob-card reveal">
+      <div class="prob-stat">1 in 4</div>
+      <h3>Appointments Are No-Shows</h3>
+      <p>Small service businesses lose up to 25% of scheduled appointments. That's not bad luck — it's a fixable problem.</p>
+    </div>
+    <div class="prob-card reveal">
+      <div class="prob-stat">$2,400</div>
+      <h3>Lost Revenue Per Month</h3>
+      <p>A shop with 80 weekly appointments losing 20 slots at $30 each bleeds over $2,400 every month. Every. Single. Month.</p>
+    </div>
+    <div class="prob-card reveal">
+      <div class="prob-stat">67%</div>
+      <h3>Just Forgot — A Text Fixes It</h3>
+      <p>Most no-shows simply forgot. A timely, personal text reminder is all it takes to get them to confirm or cancel early enough to rebook.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw" id="how-it-works">
+  <div style="text-align:center" class="reveal">
+    <div class="sec-label">How It Works</div>
+    <div class="sec-title">Up and running in 2 minutes</div>
+    <div class="sec-sub" style="margin:0 auto">No complicated setup. No tech knowledge needed. No training required.</div>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-icon">👤</div>
+      <h3>Add Your Clients</h3>
+      <p>Import your client list or add them one by one — just a name and phone number.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-icon">📅</div>
+      <h3>Schedule Appointments</h3>
+      <p>Add appointments with date, time, service and client. Done in seconds.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-icon">🤖</div>
+      <h3>AI Sends Reminders</h3>
+      <p>Notifli automatically texts clients 24h and 2h before. Messages are AI-personalized for your business type.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-icon">✅</div>
+      <h3>Track Confirmations</h3>
+      <p>Clients reply CONFIRM or CANCEL. Your dashboard updates live — fill cancelled slots before it's too late.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section class="roi-section" id="roi">
+  <div class="roi-container">
+    <div class="reveal" style="text-align:center;margin-bottom:36px">
+      <div class="sec-label">ROI Calculator</div>
+      <div class="sec-title">See exactly what no-shows cost you</div>
+      <div class="sec-sub" style="margin:0 auto">Move the sliders to see your real numbers.</div>
+    </div>
+    <div class="roi-card reveal">
+      <div class="roi-grid">
+        <div class="roi-inputs">
+          <div class="roi-input-group">
+            <label>Appointments per week</label>
+            <input type="range" class="roi-slider" id="roi-appts" min="10" max="200" value="60" oninput="calcROI()"/>
+            <div class="roi-val"><span id="roi-appts-val">60</span> appointments/week</div>
+          </div>
+          <div class="roi-input-group">
+            <label>Average appointment value</label>
+            <input type="range" class="roi-slider" id="roi-value" min="20" max="300" value="50" oninput="calcROI()"/>
+            <div class="roi-val">$<span id="roi-value-val">50</span> per appointment</div>
+          </div>
+          <div class="roi-input-group">
+            <label>Current no-show rate</label>
+            <input type="range" class="roi-slider" id="roi-noshows" min="5" max="40" value="20" oninput="calcROI()"/>
+            <div class="roi-val"><span id="roi-noshows-val">20</span>% no-show rate</div>
+          </div>
+        </div>
+        <div class="roi-result" id="roi-result">
+          <div style="font-size:0.82rem;color:var(--muted);margin-bottom:8px">You're currently losing</div>
+          <div class="roi-loss" id="roi-loss-amt">$2,400</div>
+          <div class="roi-loss-label">per month to no-shows</div>
+          <div style="font-size:0.82rem;color:var(--muted);margin-bottom:6px">With Notifli you'd save approx.</div>
+          <div class="roi-save" id="roi-save-amt">$1,200</div>
+          <div class="roi-save-label">per month (50% reduction)</div>
+          <button class="btn-hero" style="width:100%;margin-top:16px;padding:12px" onclick="window.location.href='/app'">Start Saving Now</button>
+          <div class="roi-cta-note" style="margin-top:8px"><span>✓</span> $49/mo vs <span id="roi-vs-amt">$1,200</span> saved — obvious math</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DEMO -->
+<section class="demo-section" id="demo">
+  <div class="demo-wrap">
+    <div class="reveal">
+      <div class="sec-label">Live Demo</div>
+      <h2 class="sec-title">See what your clients receive</h2>
+      <p style="color:var(--muted);line-height:1.7;margin-bottom:0">Pick your business type, hit Send — watch a real AI reminder message get sent and replied to in real time.</p>
+      <div class="demo-feats">
+        <div class="demo-feat">
+          <div class="df-icon">🤖</div>
+          <div class="df-text"><h4>AI Personalization</h4><p>Every message is uniquely crafted per client, service, and business type.</p></div>
+        </div>
+        <div class="demo-feat">
+          <div class="df-icon">↩️</div>
+          <div class="df-text"><h4>Two-Way SMS</h4><p>Clients reply CONFIRM or CANCEL. Status updates live in your dashboard.</p></div>
+        </div>
+        <div class="demo-feat">
+          <div class="df-icon">⏰</div>
+          <div class="df-text"><h4>Smart Timing</h4><p>24h and 2h reminders — the proven window to prevent no-shows.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="sms-demo-box">
+        <div class="sdemo-hdr">
+          <div class="sdemo-avatar">JD</div>
+          <div><div class="sdemo-name">Jamie Davis</div><div class="sdemo-sub">● Appointment Tomorrow</div></div>
+          <div class="sdemo-live"><div class="sdemo-dot"></div>SMS Live</div>
+        </div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px">Choose your business:</div>
+        <div class="demo-row">
+          <select class="demo-select" id="demo-type" onchange="updateDemo()">
+            <option value="salon">💅 Salon / Hair</option>
+            <option value="barbershop">✂️ Barbershop</option>
+            <option value="dental">🦷 Dental Clinic</option>
+            <option value="gym">💪 Gym / Fitness</option>
+            <option value="tattoo">🖋 Tattoo Studio</option>
+            <option value="spa">💆 Spa / Massage</option>
+            <option value="vet">🐾 Veterinary</option>
+          </select>
+          <button class="demo-send" onclick="runDemo()">Send ▶</button>
+        </div>
+        <div class="demo-msgs" id="demo-msgs">
+          <div class="sms-out" id="demo-msg-text">Hi Jamie! 💅 Your Balayage at Glow Beauty Salon is tomorrow at 3:00 PM. Reply CONFIRM to hold your spot or CANCEL to free it up ✨</div>
+        </div>
+        <div class="demo-hint" id="demo-hint">Click Send to simulate sending this reminder →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-sect" id="pricing">
+  <div style="text-align:center" class="reveal">
+    <div class="sec-label">Pricing</div>
+    <div class="sec-title">One no-show pays for the whole month</div>
+    <div class="sec-sub" style="margin:0 auto">One missed $50 appointment covers your entire subscription. Everything after that is pure profit recovered.</div>
+  </div>
+
+  <div class="pricing-toggle">
+    <span class="toggle-label active" id="lbl-monthly">Monthly</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="annual-toggle" onchange="togglePricing()"/>
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+    <span class="toggle-label" id="lbl-annual">Annual <span class="annual-badge">Save 32%</span></span>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="plan-tier">Starter</div>
+      <div class="plan-price-wrap">
+        <div class="plan-price"><sup>$</sup><span class="price-num" data-monthly="0" data-annual="0">0</span></div>
+        <div class="plan-period">14-day free trial</div>
+        <div class="plan-annual-note" id="note-0"></div>
+      </div>
+      <div class="plan-desc">Full access to try everything. No credit card needed.</div>
+      <ul class="plan-feats">
+        <li>Up to 50 appointments</li>
+        <li>AI-personalized messages</li>
+        <li>24h + 2h auto reminders</li>
+        <li>Two-way SMS replies</li>
+        <li class="off">Unlimited appointments</li>
+        <li class="off">Priority support</li>
+      </ul>
+      <button class="btn-plan btn-outline-plan" onclick="window.location.href='/app'">Start Free Trial</button>
+      <div class="plan-no-cc"><span>✓</span> No credit card required</div>
+    </div>
+
+    <div class="price-card popular reveal">
+      <div class="pop-badge">⚡ Most Popular</div>
+      <div class="plan-tier">Pro</div>
+      <div class="plan-price-wrap">
+        <div class="plan-price"><sup>$</sup><span class="price-num" data-monthly="49" data-annual="33">49</span><span style="font-size:1rem;font-weight:400;color:var(--muted)">/mo</span></div>
+        <div class="plan-period" id="period-pro">Billed monthly</div>
+        <div class="plan-annual-note" id="note-1"></div>
+      </div>
+      <div class="plan-desc">Everything you need to eliminate no-shows completely.</div>
+      <ul class="plan-feats">
+        <li>Unlimited appointments</li>
+        <li>AI-personalized messages</li>
+        <li>24h + 2h auto reminders</li>
+        <li>Two-way SMS replies</li>
+        <li>Dashboard analytics</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn-plan btn-fill-plan" onclick="window.location.href='/app'">Get Started Now</button>
+      <div class="plan-no-cc"><span>✓</span> No credit card to start · Cancel anytime</div>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="plan-tier">Agency</div>
+      <div class="plan-price-wrap">
+        <div class="plan-price"><sup>$</sup><span class="price-num" data-monthly="149" data-annual="99">149</span><span style="font-size:1rem;font-weight:400;color:var(--muted)">/mo</span></div>
+        <div class="plan-period" id="period-agency">Billed monthly</div>
+        <div class="plan-annual-note" id="note-2"></div>
+      </div>
+      <div class="plan-desc">Manage multiple business locations from one dashboard.</div>
+      <ul class="plan-feats">
+        <li>Up to 10 locations</li>
+        <li>AI-personalized messages</li>
+        <li>24h + 2h auto reminders</li>
+        <li>Two-way SMS replies</li>
+        <li>White-label option</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <button class="btn-plan btn-outline-plan" onclick="window.location.href='/app'">Contact Us</button>
+      <div class="plan-no-cc"><span>✓</span> No credit card to start</div>
+    </div>
+  </div>
+
+  <!-- Feature comparison table -->
+  <div class="compare-wrap reveal">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Starter</th>
+          <th class="hl">Pro $49</th>
+          <th>Agency $149</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Max Appointments/mo</td><td>50</td><td class="hl-col"><b>Unlimited</b></td><td>Unlimited</td></tr>
+        <tr><td>AI Personalized Messages</td><td><span class="check">✓</span></td><td class="hl-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>24h + 2h Auto Reminders</td><td><span class="check">✓</span></td><td class="hl-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Two-Way SMS Replies</td><td><span class="check">✓</span></td><td class="hl-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Dashboard Analytics</td><td><span class="cross">✕</span></td><td class="hl-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Multiple Locations</td><td><span class="cross">✕</span></td><td class="hl-col"><span class="cross">✕</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>White-Label Option</td><td><span class="cross">✕</span></td><td class="hl-col"><span class="cross">✕</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Priority Support</td><td><span class="cross">✕</span></td><td class="hl-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section" id="testimonials">
+  <div style="text-align:center" class="reveal">
+    <div class="sec-label">Testimonials</div>
+    <div class="sec-title">Businesses love Notifli</div>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"We had 8-10 no-shows every single week. Since Notifli, it's down to 1 or 2 max. That's hundreds of dollars back every week — it's a no-brainer."</div>
+      <div class="testi-auth">
+        <div class="testi-av" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">DM</div>
+        <div><div class="testi-nm">DeShawn Miller</div><div class="testi-role">Owner · Miller's Barbershop, Atlanta</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"The AI messages are so personal my clients think I'm writing them myself. One lady said 'Thanks for always thinking of me!' I didn't have the heart to tell her 😂 Love it."</div>
+      <div class="testi-auth">
+        <div class="testi-av" style="background:linear-gradient(135deg,#10b981,#059669)">SK</div>
+        <div><div class="testi-nm">Sandra Kim</div><div class="testi-role">Owner · The Glow Studio, Houston</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"In dentistry a no-show can mean a $400 missed cleaning. Notifli paid for itself in the first 3 days. Absolute no-brainer for any practice."</div>
+      <div class="testi-auth">
+        <div class="testi-av" style="background:linear-gradient(135deg,#f59e0b,#d97706)">RT</div>
+        <div><div class="testi-nm">Dr. Rachel Torres</div><div class="testi-role">Dentist · Bright Smile Dental, Chicago</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div style="text-align:center" class="reveal">
+    <div class="sec-label">FAQ</div>
+    <div class="sec-title">Everything you need to know</div>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">Do my clients need to download an app? <span class="faq-arrow">+</span></div>
+      <div class="faq-a"><p>No. Clients receive a regular SMS text message to their phone. Nothing to download, no account needed. It works on every phone.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">How does the AI personalization work? <span class="faq-arrow">+</span></div>
+      <div class="faq-a"><p>When you add an appointment, Notifli's AI generates a unique reminder message based on your business type, the client's name, the specific service, and the appointment time. Each message feels personal and hand-written — not like a generic robot blast.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">What happens when a client replies CANCEL? <span class="faq-arrow">+</span></div>
+      <div class="faq-a"><p>The appointment status updates automatically in your dashboard to "Cancelled." You'll see it immediately, giving you time to fill that slot with another client before the appointment time passes.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">Does it work with my existing booking software? <span class="faq-arrow">+</span></div>
+      <div class="faq-a"><p>Notifli works as a standalone reminder system. You add appointments directly into Notifli. Native integrations with popular booking systems (Square, Acuity, Vagaro) are on our roadmap and coming soon.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">Is there a contract or long-term commitment? <span class="faq-arrow">+</span></div>
+      <div class="faq-a"><p>Zero contracts. Month-to-month. Cancel anytime with no fees or penalties. We're confident you'll see results — if not, there's nothing holding you.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">How much does the SMS messaging cost? <span class="faq-arrow">+</span></div>
+      <div class="faq-a"><p>SMS messaging costs are included in your plan — no per-message fees or surprise bills. Your $49/mo covers everything for unlimited appointments on the Pro plan.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">Is my client data secure? <span class="faq-arrow">+</span></div>
+      <div class="faq-a"><p>Yes. All data is encrypted in transit and at rest. We never sell or share your client data. You own your data and can export it at any time.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <h2>Ready to stop losing money<br>to no-shows?</h2>
+    <p>Join hundreds of small businesses already saving thousands per month with Notifli.</p>
+    <div class="cta-form">
+      <input class="cta-input" type="email" placeholder="Enter your business email" id="cta-email"/>
+      <button class="btn-hero" style="padding:13px 22px;white-space:nowrap" onclick="ctaGo()">Start Free Trial →</button>
+    </div>
+    <div class="cta-note"><span>✓</span> 14-day free trial &nbsp;·&nbsp; <span>✓</span> No credit card &nbsp;·&nbsp; <span>✓</span> Ready in 2 minutes</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <div class="nav-logo">Notifli</div>
+      <p>AI-powered appointment reminders that cut no-shows by 50% for small businesses.</p>
+    </div>
+    <div class="foot-links">
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#demo">Demo</a>
+        <a href="#roi">ROI Calculator</a>
+      </div>
+      <div class="foot-col">
+        <h4>Industries</h4>
+        <a href="#">Barbershops</a>
+        <a href="#">Salons</a>
+        <a href="#">Dental</a>
+        <a href="#">Gyms</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2025 Notifli. All rights reserved.</p>
+    <p>Built for small businesses 💜</p>
+  </div>
+</footer>
+
+<!-- EXIT POPUP -->
+<div class="exit-overlay" id="exit-popup">
+  <div class="exit-box">
+    <button class="exit-close" onclick="closeExit()">✕</button>
+    <div style="font-size:2.5rem;margin-bottom:10px">💸</div>
+    <h3>Wait — before you go</h3>
+    <p>You're about to leave $2,000+ on the table every month. Try Notifli free for 30 days — no card needed.</p>
+    <div class="exit-offer">🎁 Extended offer: 30 days free (normally 14)</div>
+    <button class="btn-hero" style="width:100%;margin-bottom:10px" onclick="window.location.href='/app'">Claim 30-Day Free Trial</button>
+    <div style="font-size:0.78rem;color:var(--muted);cursor:pointer" onclick="closeExit()">No thanks, I'm okay losing money</div>
+  </div>
+</div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-bubble">
+  <div class="chat-window" id="chat-win">
+    <div class="chat-head">
+      <div><span>Notifli Support</span><br><small>● Online — reply in minutes</small></div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-body">
+      <div class="chat-msg">👋 Hey! Have questions about Notifli? I'm here to help. What's your business type?</div>
+    </div>
+    <div class="chat-form">
+      <input class="chat-inp" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="chat-submit" onclick="sendChat()">Send</button>
+    </div>
+  </div>
+  <button class="chat-btn" onclick="toggleChat()" id="chat-toggle-btn">💬</button>
+</div>
+
+<script>
+// ── Navbar scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);
+});
+
+// ── Scroll reveal
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ── Live counter (auto increments)
+let counterVal = 2847;
+setInterval(()=>{
+  counterVal += Math.floor(Math.random()*3)+1;
+  document.getElementById('counter-num').textContent = counterVal.toLocaleString();
+},4000);
+
+// ── Industry selector
+const industryData = {
+  salon:      { headline:'Stop Losing <span class="gradient-text">$2,400/Month</span><br>to Salon No-Shows', sub:'Notifli automatically texts your salon clients 24h and 2h before every appointment. They confirm or cancel instantly — you never get blindsided by an empty chair again.', sms:'Hi Jasmine! 💅 Your Balayage at <b>Glow Studio</b> is <b>tomorrow at 2PM</b>. Reply <b>CONFIRM</b> or <b>CANCEL</b> ✨' },
+  barbershop: { headline:'Stop Losing <span class="gradient-text">Money</span> to<br>Barbershop No-Shows', sub:'Notifli texts your clients before every cut so you never stare at an empty barber chair again. Set it up in 2 minutes — Notifli handles the rest.', sms:'Wassup Marcus! ✂️ Your Fresh Cut at <b>King\'s Barbershop</b> is <b>tomorrow at 3PM</b>. Reply <b>CONFIRM</b> or <b>CANCEL</b> 💈' },
+  dental:     { headline:'Cut Dental No-Shows<br>by <span class="gradient-text">50% This Month</span>', sub:'Every missed dental appointment is $300-500 gone. Notifli automatically reminds your patients by SMS so you fill every slot and stop losing revenue to forgotten appointments.', sms:'Hello Jamie! 🦷 Your Teeth Cleaning at <b>Bright Smile Dental</b> is <b>tomorrow at 10AM</b>. Reply <b>CONFIRM</b> to keep your slot or <b>CANCEL</b> if needed.' },
+  gym:        { headline:'Keep Your Gym Schedule<br><span class="gradient-text">Full Every Day</span>', sub:'Personal training no-shows waste your trainers\' time and your revenue. Notifli automatically reminds members before every session — they show up or cancel early enough to rebook.', sms:'Hey Jamie! 💪 Your Personal Training at <b>Iron Fitness</b> is <b>tomorrow at 7AM</b>. Coach Mike is ready! Reply <b>CONFIRM</b> or <b>CANCEL</b>' },
+  tattoo:     { headline:'Stop Tattoo No-Shows<br>from <span class="gradient-text">Wasting Your Time</span>', sub:'Tattoo no-shows cost you hours of prep time and significant revenue. Notifli reminds your clients automatically so deposits are used and chairs stay full.', sms:'Yo Jamie! 🖋 Your tattoo session at <b>Black Ink Studio</b> is <b>tomorrow at 2PM</b>. Remember to eat beforehand! Reply <b>CONFIRM</b> or <b>CANCEL</b>' },
+  spa:        { headline:'Fill Every Spa Appointment<br>with <span class="gradient-text">Zero Effort</span>', sub:'Empty massage tables and unfilled facial slots mean lost revenue and idle staff. Notifli handles all your reminder texts so every appointment slot gets used.', sms:'Hi Jamie! 💆 Your Deep Tissue Massage at <b>Serenity Spa</b> is <b>tomorrow at 1PM</b>. Get ready to relax! Reply <b>CONFIRM</b> or <b>CANCEL</b> 🌿' },
+  vet:        { headline:'Reduce Vet Appointment<br><span class="gradient-text">No-Shows by 50%</span>', sub:'Pet owners want to keep their appointments — they just forget. Notifli sends friendly automated reminders so your vet clinic stays fully booked without the chase.', sms:"Hi Jamie! 🐾 Luna's Checkup at <b>Paws Veterinary</b> is <b>tomorrow at 11AM</b>. Bring vaccination records please. Reply <b>CONFIRM</b> or <b>CANCEL</b>" },
+};
+
+function setIndustry(type, btn){
+  document.querySelectorAll('.ind-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = industryData[type];
+  document.getElementById('hero-headline').innerHTML = d.headline;
+  document.getElementById('hero-sub').textContent = d.sub.replace(/<[^>]+>/g,'');
+  document.getElementById('hero-msgs').innerHTML = `<div class="sms-out">${d.sms}</div><div class="sms-time">Delivered ✓✓</div>`;
+}
+
+// ── Hero phone animation
+const heroAnims = Object.values(industryData);
+let heroIdx=0;
+function cycleHero(){
+  const d = heroAnims[heroIdx % heroAnims.length]; heroIdx++;
+  const msgs = document.getElementById('hero-msgs');
+  msgs.innerHTML = `<div class="sms-out">${d.sms}</div><div class="sms-time">Delivered ✓✓</div>`;
+  setTimeout(()=>{
+    const t=document.createElement('div'); t.className='typing'; t.innerHTML='<span></span><span></span><span></span>'; msgs.appendChild(t);
+    setTimeout(()=>{
+      t.remove();
+      const r=document.createElement('div'); r.className='sms-in';
+      r.textContent = Math.random()>0.3 ? 'CONFIRM ✓ See you then!' : 'CANCEL — something came up';
+      msgs.appendChild(r);
+    },1800);
+  },2000);
+}
+setInterval(cycleHero, 6500);
+
+// ── ROI Calculator
+function calcROI(){
+  const appts = parseInt(document.getElementById('roi-appts').value);
+  const val   = parseInt(document.getElementById('roi-value').value);
+  const rate  = parseInt(document.getElementById('roi-noshows').value)/100;
+  document.getElementById('roi-appts-val').textContent   = appts;
+  document.getElementById('roi-value-val').textContent   = val;
+  document.getElementById('roi-noshows-val').textContent = Math.round(rate*100);
+  const monthlyLoss = Math.round(appts * 4 * val * rate);
+  const moneySaved  = Math.round(monthlyLoss * 0.5);
+  document.getElementById('roi-loss-amt').textContent = '$'+monthlyLoss.toLocaleString();
+  document.getElementById('roi-save-amt').textContent = '$'+moneySaved.toLocaleString();
+  document.getElementById('roi-vs-amt').textContent   = '$'+moneySaved.toLocaleString();
+}
+calcROI();
+
+// ── Pricing toggle
+function togglePricing(){
+  const isAnnual = document.getElementById('annual-toggle').checked;
+  document.getElementById('lbl-monthly').classList.toggle('active',!isAnnual);
+  document.getElementById('lbl-annual').classList.toggle('active',isAnnual);
+  document.querySelectorAll('.price-num').forEach(el=>{
+    el.textContent = isAnnual ? el.dataset.annual : el.dataset.monthly;
+  });
+  const proNote    = document.getElementById('note-1');
+  const agencyNote = document.getElementById('note-2');
+  if(isAnnual){
+    proNote.textContent='Billed $399/yr — save $189';
+    agencyNote.textContent='Billed $1,199/yr — save $589';
+    document.getElementById('period-pro').textContent='per month, billed annually';
+    document.getElementById('period-agency').textContent='per month, billed annually';
+  } else {
+    proNote.textContent='';
+    agencyNote.textContent='';
+    document.getElementById('period-pro').textContent='Billed monthly';
+    document.getElementById('period-agency').textContent='Billed monthly';
+  }
+}
+
+// ── Demo SMS
+const demoMsgs = {
+  salon:      "Hi Jamie! 💅 Your Balayage at Glow Beauty Salon is tomorrow at 3:00 PM. Reply CONFIRM to hold your spot or CANCEL to free it up ✨",
+  barbershop: "Wassup Jamie! ✂️ Your Fresh Cut at King's Barbershop is tomorrow at 4:00 PM. See you in the chair! Reply CONFIRM or CANCEL 💈",
+  dental:     "Hello Jamie! 🦷 Your Teeth Cleaning at Bright Smile Dental is tomorrow at 10:00 AM. Reply CONFIRM to keep your slot or CANCEL if needed.",
+  gym:        "Hey Jamie! 💪 Your Personal Training at Iron Fitness is tomorrow at 7:00 AM. Coach Mike is ready! Reply CONFIRM or CANCEL",
+  tattoo:     "Yo Jamie! 🖋 Your tattoo session at Black Ink Studio is tomorrow at 2:00 PM. Remember to eat beforehand! Reply CONFIRM or CANCEL",
+  spa:        "Hi Jamie! 💆 Your Deep Tissue Massage at Serenity Spa is tomorrow at 1:00 PM. Get ready to relax! Reply CONFIRM or CANCEL 🌿",
+  vet:        "Hi Jamie! 🐾 Luna's Checkup at Paws Veterinary is tomorrow at 11:00 AM. Bring vaccination records. Reply CONFIRM or CANCEL",
+};
+function updateDemo(){
+  const t=document.getElementById('demo-type').value;
+  document.getElementById('demo-msg-text').textContent=demoMsgs[t];
+  document.getElementById('demo-hint').textContent='Click Send to simulate sending this reminder →';
+  const old=document.getElementById('demo-msgs').querySelector('.sms-in');
+  if(old)old.remove();
+}
+function runDemo(){
+  const container=document.getElementById('demo-msgs');
+  const old=container.querySelector('.sms-in'); if(old)old.remove();
+  const typing=document.querySelector('.typing'); if(typing)typing.remove();
+  document.getElementById('demo-hint').textContent='Sending...';
+  setTimeout(()=>{
+    document.getElementById('demo-hint').textContent='Delivered ✓✓ — Waiting for reply...';
+    const t=document.createElement('div'); t.className='typing'; t.innerHTML='<span></span><span></span><span></span>'; container.appendChild(t);
+    setTimeout(()=>{
+      t.remove();
+      const r=document.createElement('div'); r.className='sms-in'; r.style.borderLeft='3px solid #10b981';
+      r.textContent='CONFIRM ✓ — See you tomorrow!'; container.appendChild(r);
+      document.getElementById('demo-hint').textContent='✅ Confirmed! Dashboard status updated automatically.';
+    },2200);
+  },700);
+}
+
+// ── FAQ
+function toggleFAQ(el){
+  const item=el.closest('.faq-item');
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+// ── Exit intent popup
+let exitShown=false;
+document.addEventListener('mouseleave',e=>{
+  if(e.clientY<10 && !exitShown){
+    exitShown=true;
+    setTimeout(()=>document.getElementById('exit-popup').classList.add('show'),400);
+  }
+});
+function closeExit(){ document.getElementById('exit-popup').classList.remove('show'); }
+
+// ── Chat widget
+function toggleChat(){
+  const w=document.getElementById('chat-win');
+  w.classList.toggle('open');
+  document.getElementById('chat-toggle-btn').textContent=w.classList.contains('open')?'✕':'💬';
+}
+function sendChat(){
+  const inp=document.getElementById('chat-input');
+  const msg=inp.value.trim(); if(!msg) return;
+  const body=document.querySelector('.chat-body');
+  const userMsg=document.createElement('div');
+  userMsg.className='chat-msg'; userMsg.style.background='rgba(124,58,237,0.2)'; userMsg.textContent='You: '+msg;
+  body.appendChild(userMsg);
+  inp.value='';
+  setTimeout(()=>{
+    const reply=document.createElement('div'); reply.className='chat-msg';
+    reply.textContent="Thanks for reaching out! We'll get back to you shortly. In the meantime, feel free to start your free 14-day trial — no credit card needed!";
+    body.appendChild(reply); body.scrollTop=body.scrollHeight;
+  },1000);
+  body.scrollTop=body.scrollHeight;
+}
+
+// ── CTA
+function ctaGo(){ window.location.href='/app'; }
+</script>
+</body>
+</html>
