@@ -41,7 +41,7 @@
       
       <input type="text" id="reg-name" placeholder="Business Name" required />
       <input type="email" id="reg-email" placeholder="Work Email" required />
-      <input type="password" id="reg-password" placeholder="Password (8-70 characters)" minlength="8" maxlength="70" required />
+      <input type="password" id="reg-password" placeholder="Password (min 8 characters)" minlength="8" required />
       
       <label class="label">Business Type</label>
       <select id="reg-type">
@@ -356,10 +356,7 @@ async function doRegister(e) {
     return;
   }
   
-  if (password.length > 70) {
-    document.getElementById('reg-error').textContent = 'Password cannot be longer than 70 characters';
-    return;
-  }
+
   
   try {
     const res = await fetch('/api/auth/register', {

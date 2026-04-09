@@ -9,10 +9,20 @@ from backend.core.config import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12)
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password[:72])
+    # Truncate to 72 bytes (not characters) to satisfy bcrypt limit
+    # Encode to UTF-8, truncate to 72 bytes, decode back
+    password_bytes = password.encode('utf-8')[:72]
+    truncated = password_bytes.decode('utf-8', errors='ignore')
+    return pwd_context.hash(truncated)
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain[:72], hashed)
+    # Truncate to 72 bytes for verification (same as hashing)
+    password_bytes = plain.encode('utf-8')[:72]
+    truncated = password_bytes.decode('utf-8', errors='ignore')
+    try:
+        return pwd_context.verify(truncated, hashed)
+    except Exception:
+        return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -31,11 +41,10 @@ def register_business(db: Session, name: str, email: str, password: str, busines
     if existing:
         raise ValueError("Email already registered")
     
-    # Validate password length (bcrypt limit is 72 bytes, but we'll use 70 to be safe)
-    if len(password) > 70:
-        raise ValueError("Password cannot be longer than 70 characters")
+    # Validate password minimum length
     if len(password) < 6:
         raise ValueError("Password must be at least 6 characters")
+    # No max length check needed - hash_password truncates to 72 bytes automatically
 
     trial_ends = datetime.utcnow() + timedelta(days=settings.FREE_TRIAL_DAYS)
     biz = Business(
