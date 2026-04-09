@@ -1,26 +1,24 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from sqlalchemy.orm import Session
 from backend.models.database import Business, ReminderSettings
 from backend.core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12)
-
 def hash_password(password: str) -> str:
-    # Truncate to 72 bytes (not characters) to satisfy bcrypt limit
-    # Encode to UTF-8, truncate to 72 bytes, decode back
+    # Truncate to 72 bytes to satisfy bcrypt limit
     password_bytes = password.encode('utf-8')[:72]
-    truncated = password_bytes.decode('utf-8', errors='ignore')
-    return pwd_context.hash(truncated)
+    # Generate salt and hash
+    salt = bcrypt.gensalt(rounds=12)
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    return hashed.decode('utf-8')
 
 def verify_password(plain: str, hashed: str) -> bool:
     # Truncate to 72 bytes for verification (same as hashing)
     password_bytes = plain.encode('utf-8')[:72]
-    truncated = password_bytes.decode('utf-8', errors='ignore')
     try:
-        return pwd_context.verify(truncated, hashed)
+        return bcrypt.checkpw(password_bytes, hashed.encode('utf-8'))
     except Exception:
         return False
 
@@ -44,8 +42,7 @@ def register_business(db: Session, name: str, email: str, password: str, busines
     # Validate password minimum length
     if len(password) < 6:
         raise ValueError("Password must be at least 6 characters")
-    # No max length check needed - hash_password truncates to 72 bytes automatically
-
+    
     trial_ends = datetime.utcnow() + timedelta(days=settings.FREE_TRIAL_DAYS)
     biz = Business(
         name=name,
