@@ -30,6 +30,12 @@ def register_business(db: Session, name: str, email: str, password: str, busines
     existing = db.query(Business).filter(Business.email == email).first()
     if existing:
         raise ValueError("Email already registered")
+    
+    # Validate password length (bcrypt limit is 72 bytes, but we'll use 70 to be safe)
+    if len(password) > 70:
+        raise ValueError("Password cannot be longer than 70 characters")
+    if len(password) < 6:
+        raise ValueError("Password must be at least 6 characters")
 
     trial_ends = datetime.utcnow() + timedelta(days=settings.FREE_TRIAL_DAYS)
     biz = Business(

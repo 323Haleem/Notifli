@@ -41,7 +41,7 @@
       
       <input type="text" id="reg-name" placeholder="Business Name" required />
       <input type="email" id="reg-email" placeholder="Work Email" required />
-      <input type="password" id="reg-password" placeholder="Password (min 8 characters)" minlength="8" required />
+      <input type="password" id="reg-password" placeholder="Password (8-70 characters)" minlength="8" maxlength="70" required />
       
       <label class="label">Business Type</label>
       <select id="reg-type">
@@ -345,6 +345,21 @@ async function doRegister(e) {
   const password = document.getElementById('reg-password').value;
   const business_type = document.getElementById('reg-type').value;
   const timezone = document.getElementById('reg-tz').value;
+  
+  if (!name || !email || !password) {
+    document.getElementById('reg-error').textContent = 'Please fill in all fields';
+    return;
+  }
+  
+  if (password.length < 8) {
+    document.getElementById('reg-error').textContent = 'Password must be at least 8 characters';
+    return;
+  }
+  
+  if (password.length > 70) {
+    document.getElementById('reg-error').textContent = 'Password cannot be longer than 70 characters';
+    return;
+  }
   
   try {
     const res = await fetch('/api/auth/register', {
