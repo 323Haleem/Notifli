@@ -30,6 +30,8 @@ if os.path.exists(static_path):
 
 index_path   = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/templates/index.html"))
 landing_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/templates/landing.html"))
+privacy_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/templates/privacy.html"))
+terms_path   = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/templates/terms.html"))
 
 # Include API routes
 app.include_router(router, prefix="/api")
@@ -39,6 +41,15 @@ def startup():
     create_tables()
     start_scheduler()
     print(f"Notifli started on {settings.APP_URL}")
+
+# Legal pages
+@app.get("/privacy")
+async def privacy():
+    return FileResponse(privacy_path)
+
+@app.get("/terms")
+async def terms():
+    return FileResponse(terms_path)
 
 @app.on_event("shutdown")
 def shutdown():
