@@ -22,7 +22,9 @@ class Settings(BaseSettings):
     STRIPE_WEBHOOK_SECRET: str = ""
     STRIPE_PRICE_ID: str = "price_demo"
 
-    OLLAMA_URL: str = "http://localhost:11434"
+    # AI Model Configuration
+    OPENROUTER_API_KEY: str = ""  # For production AI messages
+    OLLAMA_URL: str = "http://localhost:11434"  # For local development
     OLLAMA_MODEL: str = "qwen2.5-coder:14b"
 
     FREE_TRIAL_DAYS: int = 14
