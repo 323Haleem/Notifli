@@ -3,11 +3,27 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
 from backend.core.config import settings
+import os
 
-engine = create_engine(
-    settings.DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
+# Detect database type and configure engine accordingly
+db_url = settings.DATABASE_URL
+is_postgres = db_url and db_url.startswith("postgresql")
+
+if is_postgres:
+    # PostgreSQL configuration
+    engine = create_engine(
+        db_url,
+        pool_pre_ping=True,  # Auto-reconnect on connection loss
+        pool_size=10,
+        max_overflow=20
+    )
+else:
+    # SQLite configuration (local dev only)
+    engine = create_engine(
+        db_url,
+        connect_args={"check_same_thread": False}
+    )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

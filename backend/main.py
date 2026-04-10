@@ -38,9 +38,20 @@ app.include_router(router, prefix="/api")
 
 @app.on_event("startup")
 def startup():
-    create_tables()
-    start_scheduler()
-    print(f"Notifli started on {settings.APP_URL}")
+    try:
+        print("Initializing database tables...")
+        create_tables()
+        print("Database tables created successfully")
+        
+        print("Starting SMS scheduler...")
+        start_scheduler()
+        print(f"Notifli started on {settings.APP_URL}")
+    except Exception as e:
+        print(f"STARTUP ERROR: {e}")
+        print(f"Database URL: {settings.DATABASE_URL[:50]}...")
+        import traceback
+        traceback.print_exc()
+        raise
 
 # Legal pages
 @app.get("/privacy")
